@@ -198,19 +198,19 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Action Buttons - Side by Side on Mobile, Perfectly Sized */}
+        {/* Action Buttons - Perfectly Centered on Mobile & PC */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:gap-3 w-full max-w-xs sm:max-w-none px-1 sm:px-0"
+          className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-row sm:items-center sm:justify-center sm:gap-4 w-full max-w-xs sm:max-w-lg mx-auto px-1 sm:px-0"
         >
           {/* Send Wishes CTA */}
           <a
             href="#rsvp"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 xs:px-5 sm:px-7 py-2.5 sm:py-3 rounded-full gold-gradient-bg text-black font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-[38px] sm:min-h-[44px]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 xs:px-5 sm:px-7 py-2.5 sm:py-3 rounded-full gold-gradient-bg text-black font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-[38px] sm:min-h-[44px]"
           >
-            <Heart className="w-3.5 h-3.5 fill-black" />
+            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-black" />
             <span>Send Wishes</span>
           </a>
 
@@ -218,10 +218,10 @@ export default function Hero() {
           <button
             type="button"
             onClick={() => setIsCardModalOpen(true)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 xs:px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/60 text-[#f6e29f] hover:bg-[#d4af37]/20 font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider shadow-lg active:scale-95 transition-all min-h-[38px] sm:min-h-[44px] cursor-pointer touch-manipulation"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 xs:px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/60 text-[#f6e29f] hover:bg-[#d4af37]/20 font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider shadow-lg active:scale-95 transition-all min-h-[38px] sm:min-h-[44px] cursor-pointer touch-manipulation"
           >
-            <FileText className="w-3.5 h-3.5 text-[#d4af37]" />
-            <span>Invitation</span>
+            <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#d4af37]" />
+            <span>Invitation Card</span>
           </button>
         </motion.div>
       </motion.div>
@@ -229,10 +229,10 @@ export default function Hero() {
       {/* Floating scroll indicator */}
       <a
         href="#couple"
-        className="hidden sm:flex absolute bottom-4 left-1/2 -translate-x-1/2 z-10 text-white/70 hover:text-white flex-col items-center gap-1 transition-colors"
+        className="hidden sm:flex absolute bottom-5 left-1/2 -translate-x-1/2 z-10 text-white/70 hover:text-white flex-col items-center gap-1 transition-colors"
       >
-        <span className="text-[10px] uppercase tracking-widest text-white/80 font-cinzel">Scroll Down</span>
-        <ChevronDown className="w-3.5 h-3.5 animate-bounce text-white/80" />
+        <span className="text-[10px] uppercase tracking-widest text-[#d4af37]/80 font-cinzel">Scroll Down</span>
+        <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#d4af37]/80" />
       </a>
 
       {/* Official Invitation Card Modal */}
