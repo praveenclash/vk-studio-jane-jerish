@@ -45,10 +45,10 @@ export default function Couple() {
           {/* Fixed aspect ratio card window - image glides smoothly inside on scroll */}
           <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 sm:mb-6 bg-stone-900 shadow-inner">
             <ParallaxImage
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80"
+              src="/images/groom-jerish.webp"
               alt="Groom - Jerish"
-              offset={40}
-              objectPosition="top center"
+              offset={20}
+              objectPosition="center 30%"
             />
             <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-10 bg-[#0b0907]/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] sm:text-xs font-cinzel font-semibold tracking-wider text-[#f6e29f] border border-[#d4af37]/40 uppercase shadow-sm">
               The Groom
@@ -83,10 +83,10 @@ export default function Couple() {
           {/* Fixed aspect ratio card window - image glides smoothly inside on scroll */}
           <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 sm:mb-6 bg-stone-900 shadow-inner">
             <ParallaxImage
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80"
+              src="/images/bride-jane.webp"
               alt="Bride - Jane"
-              offset={40}
-              objectPosition="top center"
+              offset={20}
+              objectPosition="center 25%"
             />
             <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-10 bg-[#0b0907]/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] sm:text-xs font-cinzel font-semibold tracking-wider text-[#f6e29f] border border-[#d4af37]/40 uppercase shadow-sm">
               The Bride

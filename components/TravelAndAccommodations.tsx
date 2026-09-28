@@ -33,7 +33,7 @@ export default function TravelAndAccommodations() {
     <section id="travel" className="py-16 sm:py-24 bg-[#0b0907] border-t border-[#d4af37]/20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
@@ -102,58 +102,7 @@ export default function TravelAndAccommodations() {
           })}
         </div>
 
-        {/* Recommended Hotels */}
-        <div>
-          <motion.h3 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="font-serif-luxury text-xl sm:text-2xl text-[#fcfbf7] mb-4 sm:mb-6 text-center font-normal"
-          >
-            Recommended Nearby Stays
-          </motion.h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            {accommodations.map((hotel, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="glass-panel-midnight rounded-2xl p-4 xs:p-5 sm:p-6 border border-[#d4af37]/20 shadow-md flex flex-col justify-between hover:border-[#d4af37]/50 transition-colors"
-              >
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-1.5 mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#f6e29f] bg-[#181410] px-2.5 py-0.5 rounded-full border border-[#d4af37]/30">
-                      {hotel.stars}
-                    </span>
-                    <span className="text-[11px] sm:text-xs text-[#b8ab96]">{hotel.distance}</span>
-                  </div>
-                  <h4 className="font-serif-luxury text-lg sm:text-xl text-[#fcfbf7] font-semibold mb-1.5 sm:mb-2">
-                    {hotel.name}
-                  </h4>
-                  <p className="text-xs text-[#cfc5b6] mb-5 sm:mb-6 flex items-start gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#d4af37] shrink-0 mt-0.5" />
-                    <span>{hotel.address}</span>
-                  </p>
-                </div>
-
-                <a
-                  href={hotel.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl border border-[#d4af37]/45 text-xs font-semibold text-[#f6e29f] hover:bg-[#d4af37]/15 transition-colors min-h-[42px] touch-manipulation"
-                >
-                  <span>Book / View Hotel</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-[#d4af37]" />
-                </a>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

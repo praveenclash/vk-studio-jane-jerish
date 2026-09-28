@@ -17,7 +17,7 @@ export default function EventsSchedule() {
       dressCode: "Festive Ethnic, Silk Sarees / Suits",
       calendarUrl: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Jane+%26+Jerish+Engagement&dates=20261011T130000Z/20261011T163000Z&details=Engagement+Celebration+at+ASKR+Thirumana+Mandapam&location=ASKR+Thirumana+Mandapam+Puthugramam+Thoothukudi",
       mapsUrl: "https://maps.google.com/?q=ASKR+Thirumana+Mandapam+Puthugramam+Thoothukudi",
-      image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=700&q=80",
+      image: "/images/MAD_1732.webp",
     },
     {
       title: "Holy Matrimony Service",
@@ -29,7 +29,7 @@ export default function EventsSchedule() {
       dressCode: "Traditional Silk Sarees, Silk Kurta / Formal Suits",
       calendarUrl: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Jane+%26+Jerish+Holy+Matrimony&dates=20261012T043000Z/20261012T073000Z&details=Holy+Matrimony+Service+at+St.+James+Church+Toovipuram+Thoothukudi&location=St.+James+Church+Toovipuram+Thoothukudi",
       mapsUrl: "https://maps.google.com/?q=St.+James+Church+Toovipuram+Thoothukudi",
-      image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=700&q=80",
+      image: "/images/MAD_1739.webp",
       featured: true,
     },
     {
@@ -42,7 +42,7 @@ export default function EventsSchedule() {
       dressCode: "Traditional Festive / Elegant Formal Attire",
       calendarUrl: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Jane+%26+Jerish+Wedding+Reception+and+Feast&dates=20261012T070000Z/20261012T110000Z&details=Wedding+Feast+at+ASKR+Thirumana+Mandapam+Puthugramam+Thoothukudi&location=ASKR+Thirumana+Mandapam+Puthugramam+Thoothukudi",
       mapsUrl: "https://maps.google.com/?q=ASKR+Thirumana+Mandapam+Puthugramam+Thoothukudi",
-      image: "https://images.unsplash.com/photo-1545232979-fbf68fe9f1f8?auto=format&fit=crop&w=700&q=80",
+      image: "/images/MAD_1666.webp",
     },
   ];
 
@@ -131,12 +131,7 @@ export default function EventsSchedule() {
                       <span className="text-[11px] sm:text-[12px] text-[#b8ab96]">{event.address}</span>
                     </div>
                   </div>
-                  <div className="flex items-start gap-2.5 sm:gap-3 pt-1">
-                    <Sparkles className="w-4 h-4 text-[#d4af37] shrink-0 mt-0.5" />
-                    <div className="text-[11px] sm:text-[12px] text-[#f6e29f] bg-[#1a140f] px-2.5 py-1.5 rounded-lg border border-[#d4af37]/30 w-full break-words">
-                      <span className="font-semibold text-[#d4af37]">Dress Code:</span> {event.dressCode}
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
 

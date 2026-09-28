@@ -13,7 +13,7 @@ export default function Story() {
       description:
         "A fateful and magical day by the scenic shores of Kanyakumari where the three seas embrace. What started with warm greetings blossomed immediately into an effortless connection of shared values, smiles, and heartfelt conversation.",
       icon: Coffee,
-      image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=700&q=80",
+      image: "/images/MAD_1873.webp",
     },
     {
       year: "August 2026",
@@ -21,7 +21,7 @@ export default function Story() {
       description:
         "Through thoughtful discussions about life, family, and future dreams, every passing day made it crystal clear — we were meant to walk through life's every season together hand in hand.",
       icon: Compass,
-      image: "https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=700&q=80",
+      image: "/images/MAD_1721.webp",
     },
     {
       year: "September 19, 2026",
@@ -29,7 +29,7 @@ export default function Story() {
       description:
         "Along the golden sands and sea breeze of Kanyakumari Beach, we celebrated our pre-wedding moments with laughter and joyous anticipation for the sacred vows to come.",
       icon: Gem,
-      image: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=700&q=80",
+      image: "/images/MAD_1882.webp",
     },
     {
       year: "October 12, 2026",
@@ -37,7 +37,7 @@ export default function Story() {
       description:
         "Surrounded by our beloved parents, family, and well-wishers at ASKR Thirumana Mandapam and CSI Church Punnaiyadi Community Hall, we make our sacred covenant in holy matrimony.",
       icon: Star,
-      image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=700&q=80",
+      image: "/images/MAD_1740.webp",
     },
   ];
 
