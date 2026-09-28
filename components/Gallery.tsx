@@ -1,105 +1,63 @@
 "use client";
 
 import React, { useState } from "react";
-import { Heart, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import Image from "next/image";
+import { Heart, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import ParallaxImage from "./ParallaxImage";
 
 export default function Gallery() {
-  const [activeCategory, setActiveCategory] = useState("all");
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
   const photos = [
     {
       id: 1,
-      category: "prewedding",
       caption: "Lover's Embrace in the Coconut Grove",
       src: "/images/MAD_1664.webp",
       position: "center 20%",
     },
     {
       id: 2,
-      category: "prewedding",
-      caption: "Radiant Smiles & Gentle Grace",
-      src: "/images/MAD_1748.webp",
-      position: "center 25%",
-    },
-    {
-      id: 3,
-      category: "details",
       caption: "Hand in Hand, Vows for a Lifetime",
       src: "/images/MAD_1732.webp",
       position: "center",
     },
     {
-      id: 4,
-      category: "beach",
+      id: 3,
       caption: "Golden Sunset by Kanyakumari Beach",
       src: "/images/MAD_1882.webp",
       position: "center 40%",
     },
     {
-      id: 5,
-      category: "prewedding",
-      caption: "A Bridge of Love & New Beginnings",
-      src: "/images/MAD_1721.webp",
-      position: "center 25%",
-    },
-    {
-      id: 6,
-      category: "beach",
+      id: 4,
       caption: "Whispers of the Ocean Shore",
       src: "/images/MAD_1873.webp",
       position: "center 20%",
     },
     {
-      id: 7,
-      category: "prewedding",
-      caption: "Under the Canopy of Grace",
-      src: "/images/MAD_1739.webp",
-      position: "center 30%",
-    },
-    {
-      id: 8,
-      category: "beach",
+      id: 5,
       caption: "Evening Glow & Endless Horizon",
       src: "/images/MAD_1880.webp",
       position: "center 20%",
     },
     {
-      id: 9,
-      category: "prewedding",
-      caption: "Peaceful Solace in the Woods",
-      src: "/images/MAD_1824.webp",
-      position: "center 20%",
-    },
-    {
-      id: 10,
-      category: "prewedding",
+      id: 6,
       caption: "A Tender Kiss of Devotion",
       src: "/images/MAD_1858.webp",
       position: "center 25%",
     },
     {
-      id: 11,
-      category: "beach",
+      id: 7,
       caption: "Sunset Laughter & Ocean Breeze",
       src: "/images/MAD_1881.webp",
       position: "center 30%",
     },
     {
-      id: 12,
-      category: "prewedding",
+      id: 8,
       caption: "Joyous Moments in Nature",
       src: "/images/MAD_1666.webp",
       position: "center 25%",
     },
   ];
-
-  const filteredPhotos =
-    activeCategory === "all"
-      ? photos
-      : photos.filter((p) => p.category === activeCategory);
 
   const openLightbox = (index: number) => {
     setSelectedPhotoIndex(index);
@@ -111,14 +69,14 @@ export default function Gallery() {
 
   const nextPhoto = () => {
     if (selectedPhotoIndex !== null) {
-      setSelectedPhotoIndex((selectedPhotoIndex + 1) % filteredPhotos.length);
+      setSelectedPhotoIndex((selectedPhotoIndex + 1) % photos.length);
     }
   };
 
   const prevPhoto = () => {
     if (selectedPhotoIndex !== null) {
       setSelectedPhotoIndex(
-        (selectedPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length
+        (selectedPhotoIndex - 1 + photos.length) % photos.length
       );
     }
   };
@@ -128,14 +86,14 @@ export default function Gallery() {
       {/* Subtle backdrop glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#d4af37]/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center max-w-2xl mx-auto mb-7 sm:mb-10"
+          className="text-center max-w-2xl mx-auto mb-8 sm:mb-12"
         >
           <span className="text-[#d4af37] font-script text-xl sm:text-2xl block mb-1">
             Captured Moments
@@ -151,61 +109,31 @@ export default function Gallery() {
           <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
             Every picture holds a gentle smile, a quiet prayer, and a promise of forever.
           </p>
-
-          {/* Filter Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-5 sm:mt-8">
-            {[
-              { id: "all", label: "All Photos" },
-              { id: "prewedding", label: "Pre-Wedding" },
-              { id: "beach", label: "Beach & Sunset" },
-              { id: "details", label: "Rings & Details" },
-            ].map((tab) => (
-              <motion.button
-                key={tab.id}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setActiveCategory(tab.id)}
-                className={`px-3.5 xs:px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold tracking-wider uppercase transition-all touch-manipulation min-h-[36px] ${
-                  activeCategory === tab.id
-                    ? "gold-gradient-bg text-black shadow-md shadow-[#d4af37]/20"
-                    : "bg-[#181410] text-[#b8ab96] hover:text-white border border-[#d4af37]/25 hover:border-[#d4af37]"
-                }`}
-              >
-                {tab.label}
-              </motion.button>
-            ))}
-          </div>
         </motion.div>
 
-        {/* Gallery Grid: 2 columns on mobile, 3 on tablet, 4 on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 xs:gap-3.5 sm:gap-5 lg:gap-6">
-          {filteredPhotos.map((photo, index) => (
+        {/* Gallery Grid: Full-width 1 column on mobile, 2 on tablet, 3 on desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
+          {photos.map((photo, index) => (
             <motion.div
               key={photo.id}
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.5, delay: (index % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, delay: (index % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ y: -4, transition: { duration: 0.25 } }}
               onClick={() => openLightbox(index)}
-              className="group relative aspect-[4/5] rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl hover:border-[#d4af37]/70 transition-all duration-300 border border-[#d4af37]/25 bg-stone-950 touch-manipulation"
+              className="group relative w-full aspect-[4/5] sm:aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer shadow-xl hover:shadow-2xl hover:border-[#d4af37]/70 transition-all duration-300 border border-[#d4af37]/25 bg-stone-950 touch-manipulation"
             >
-              <img
+              <Image
                 src={photo.src}
                 alt={photo.caption}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                quality={78}
+                priority={index < 2}
                 style={{ objectPosition: photo.position }}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out will-change-transform"
-                loading="lazy"
+                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out will-change-transform"
               />
-
-              {/* Overlay with details */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-95 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2.5 sm:p-4 text-white pointer-events-none z-10">
-                <span className="text-[11px] sm:text-xs font-serif-luxury tracking-wide drop-shadow line-clamp-2 text-[#fcfbf7]">
-                  {photo.caption}
-                </span>
-                <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] text-[#f6e29f] mt-1 font-semibold uppercase tracking-wider font-cinzel">
-                  <ZoomIn className="w-3 h-3 text-[#d4af37]" /> Tap to view
-                </span>
-              </div>
             </motion.div>
           ))}
         </div>
@@ -256,12 +184,12 @@ export default function Gallery() {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={filteredPhotos[selectedPhotoIndex]?.src}
-                alt={filteredPhotos[selectedPhotoIndex]?.caption}
+                src={photos[selectedPhotoIndex]?.src}
+                alt={photos[selectedPhotoIndex]?.caption}
                 className="max-h-[65vh] sm:max-h-[75vh] w-auto max-w-full object-contain rounded-xl shadow-2xl border border-[#d4af37]/30"
               />
               <p className="text-white/90 text-xs sm:text-sm mt-3 font-serif-luxury tracking-wider text-center px-4 max-w-md">
-                {filteredPhotos[selectedPhotoIndex]?.caption} <span className="text-[#e5cb9b]">({selectedPhotoIndex + 1} / {filteredPhotos.length})</span>
+                {photos[selectedPhotoIndex]?.caption} <span className="text-[#e5cb9b]">({selectedPhotoIndex + 1} / {photos.length})</span>
               </p>
             </motion.div>
 

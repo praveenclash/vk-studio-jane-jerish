@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 interface ParallaxImageProps {
@@ -9,14 +10,16 @@ interface ParallaxImageProps {
   className?: string;
   offset?: number;
   objectPosition?: string;
+  priority?: boolean;
 }
 
 export default function ParallaxImage({
   src,
   alt,
   className = "",
-  offset = 35,
+  offset = 30,
   objectPosition = "center",
+  priority = false,
 }: ParallaxImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -31,14 +34,22 @@ export default function ParallaxImage({
 
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden select-none">
-      <motion.img
-        src={src}
-        alt={alt}
-        style={{ y, scale, objectPosition }}
-        className={`w-full h-full object-cover will-change-transform pointer-events-none select-none transition-opacity duration-300 ${className}`}
-        loading="lazy"
-        draggable={false}
-      />
+      <motion.div
+        style={{ y, scale }}
+        className="absolute inset-[-12%] will-change-transform pointer-events-none select-none"
+      >
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          quality={78}
+          style={{ objectPosition }}
+          className={`object-cover ${className}`}
+        />
+      </motion.div>
     </div>
   );
 }
+

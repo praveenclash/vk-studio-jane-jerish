@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Heart, Volume2, VolumeX, Menu, X, Calendar, MessageSquareHeart } from "lucide-react";
+import { Heart, Volume2, VolumeX, Calendar, MessageSquareHeart } from "lucide-react";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -40,16 +39,6 @@ export default function Navbar() {
       });
     }
   };
-
-  const navLinks = [
-    { name: "Our Story", href: "#story" },
-    { name: "Couple", href: "#couple" },
-    { name: "Events", href: "#events" },
-    { name: "Gallery", href: "#gallery" },
-    { name: "RSVP & Wishes", href: "#rsvp" },
-    { name: "Guestbook", href: "#guestbook" },
-    { name: "Travel & FAQ", href: "#travel" },
-  ];
 
   return (
     <>
@@ -124,74 +113,9 @@ export default function Navbar() {
                Wish
               </a>
 
-              {/* Mobile hamburger */}
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center touch-manipulation text-white hover:bg-white/10"
-                aria-label="Toggle Navigation Menu"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6 text-[#d4af37]" /> : <Menu className="w-6 h-6 text-[#d4af37]" />}
-              </button>
             </div>
           </div>
         </div>
-
-        {/* Mobile menu backdrop & dropdown */}
-        {mobileMenuOpen && (
-          <>
-            <div
-              className="lg:hidden fixed inset-0 top-[calc(env(safe-area-inset-top,0px)+54px)] bg-black/70 backdrop-blur-sm z-40 transition-opacity"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            <div className="lg:hidden relative z-50 bg-[#120e0a]/98 backdrop-blur-2xl border-b border-[#d4af37]/30 px-5 sm:px-6 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] shadow-2xl animate-fadeIn max-h-[calc(100dvh-5rem)] overflow-y-auto">
-              <div className="flex flex-col gap-2.5">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-sm sm:text-base font-medium text-[#fcfbf7] hover:text-[#d4af37] transition-colors py-2.5 px-1 border-b border-[#d4af37]/15 flex items-center justify-between min-h-[44px] touch-manipulation"
-                  >
-                    <span>{link.name}</span>
-                    <span className="text-[#d4af37] text-xs">→</span>
-                  </a>
-                ))}
-                <div className="pt-3 flex flex-col gap-2.5">
-                  <button
-                    type="button"
-                    onClick={toggleMusic}
-                    className={`w-full py-2.5 px-4 rounded-full text-xs font-semibold uppercase tracking-wider border flex items-center justify-center gap-2 min-h-[44px] touch-manipulation transition-all ${
-                      isPlayingMusic
-                        ? "bg-[#d4af37] text-black border-[#d4af37] shadow-lg"
-                        : "bg-[#181410] text-[#f6e29f] border-[#d4af37]/40 hover:bg-[#d4af37]/15"
-                    }`}
-                  >
-                    {isPlayingMusic ? (
-                      <>
-                        <Volume2 className="w-4 h-4 text-black" />
-                        <span>Music Playing (Tap to Pause)</span>
-                      </>
-                    ) : (
-                      <>
-                        <VolumeX className="w-4 h-4 text-[#d4af37]" />
-                        <span>Play Wedding Music (Anbil Avan)</span>
-                      </>
-                    )}
-                  </button>
-
-                  <a
-                    href="#rsvp"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-3 rounded-full text-xs font-bold uppercase tracking-wider text-black gold-gradient-bg shadow-md active:scale-95 transition-transform min-h-[44px] flex items-center justify-center touch-manipulation"
-                  >
-                    RSVP & Send Wishes
-                  </a>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
       </header>
     </>
   );
