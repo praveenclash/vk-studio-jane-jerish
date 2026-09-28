@@ -17,12 +17,9 @@ if (rows.length === 0) {
     rows.map((r) => ({
       ID: r.id,
       Name: r.name,
-      Relation: r.relation,
-      Attendance: r.attendance,
-      Guests: r.guests_count,
       Likes: r.likes,
       Date: r.created_at,
-      Message: r.message.length > 40 ? r.message.substring(0, 37) + "..." : r.message,
+      Message: r.message.length > 50 ? r.message.substring(0, 47) + "..." : r.message,
     }))
   );
 }

@@ -57,17 +57,17 @@ export default function Couple() {
 
           <div className="text-center px-1">
             <h3 className="font-serif-luxury text-xl xs:text-2xl sm:text-3xl text-[#fcfbf7] font-normal mb-1">
-              Jerish Jeyasekaran
+              Jerish Jeya Sekaran <span className="text-xs xs:text-sm font-cinzel text-[#d4af37] font-semibold">M.Th</span>
             </h3>
             <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#d4af37] font-cinzel font-medium mb-2.5 sm:mb-3">
-              Son of Mr. Jeyasekaran & Mrs. Rethinam Jeyasekaran
+              Son of Rev. D. Jeyasekaran (IEM) &amp; Mrs. C. Rathinam Jeyasekaran (IEM)
             </p>
             <p className="text-[#d4c9b9] text-xs sm:text-sm leading-relaxed italic mb-4">
               &ldquo;Jane brings warmth, spontaneous laughter, and tranquility to my life. Loving her has been the easiest and most beautiful decision I have ever made.&rdquo;
             </p>
             <div className="inline-flex flex-wrap items-center justify-center gap-1.5 text-[11px] sm:text-xs text-[#f6e29f] bg-[#1a140f] px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-[#d4af37]/30 max-w-full">
               <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 shrink-0 text-[#d4af37]" />
-              <span>Professor • Educator</span>
+              <span>HBI Professor • Theologian</span>
             </div>
           </div>
         </motion.div>
@@ -95,17 +95,17 @@ export default function Couple() {
 
           <div className="text-center px-1">
             <h3 className="font-serif-luxury text-xl xs:text-2xl sm:text-3xl text-[#fcfbf7] font-normal mb-1">
-              Jane Jaculin Silviya
+              J. Jane Jaculin Silviya <span className="text-xs xs:text-sm font-cinzel text-[#d4af37] font-semibold">M.A., B.Ed</span>
             </h3>
             <p className="text-[10px] sm:text-xs uppercase tracking-widest text-[#d4af37] font-cinzel font-medium mb-2.5 sm:mb-3">
-              Daughter of Mr. Johnson & Mrs. Geetha
+              Daughter of Mr. C. Johnson (B.Com., M.A.) &amp; Mrs. R. Geetha Johnson (M.A., M.Ed., Rtd. H.M)
             </p>
             <p className="text-[#d4c9b9] text-xs sm:text-sm leading-relaxed italic mb-4">
               &ldquo;Jerish is my safe harbor, my biggest cheerleader, and my favorite adventure partner. I cannot wait to spend all my tomorrows by his side.&rdquo;
             </p>
             <div className="inline-flex flex-wrap items-center justify-center gap-1.5 text-[11px] sm:text-xs text-[#f6e29f] bg-[#1a140f] px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-[#d4af37]/30 max-w-full">
               <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 shrink-0 text-[#d4af37]" />
-              <span>Beloved Bride • Loving Partner</span>
+              <span>Educator • Post Graduate Scholar</span>
             </div>
           </div>
         </motion.div>

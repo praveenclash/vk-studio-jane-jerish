@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, relation, message, attendance, guests_count } = body;
+    const { name, message } = body;
 
     if (!name || typeof name !== "string" || !name.trim()) {
       return NextResponse.json(
@@ -37,12 +37,7 @@ export async function POST(request: Request) {
 
     const newWish = createWish({
       name: name.slice(0, 100),
-      relation: relation ? String(relation).slice(0, 50) : "Friend",
       message: message.slice(0, 1000),
-      attendance: ["attending", "regretfully_decline", "undecided"].includes(attendance)
-        ? attendance
-        : "attending",
-      guests_count: Number(guests_count) > 0 ? Math.min(Number(guests_count), 20) : 1,
     });
 
     return NextResponse.json({ success: true, data: newWish }, { status: 201 });

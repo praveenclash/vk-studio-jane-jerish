@@ -11,7 +11,7 @@ export default function Faq() {
     {
       question: "What is the dress code for the events?",
       answer:
-        "For Pre-Wedding at Kanyakumari Beach: Coastal pastels, casual chic, or light ethnic wear. For Wedding at ASKR Thirumana Mandapam: Traditional silk sarees, dhotis, or formal suits. For Reception at CSI Church Punnaiyadi Community Hall: Elegant evening wear, suits, or festive attire.",
+        "For Engagement (11.10.2026) at ASKR Mandapam: Festive Ethnic, Silk Sarees or Blazers. For Holy Matrimony (12.10.2026) at St. James Church: Traditional silk sarees, dhotis, or formal suits. For the Wedding Feast & Function: Elegant traditional or formal wear.",
     },
     {
       question: "Can I bring a Plus One or additional family members?",
@@ -31,12 +31,12 @@ export default function Faq() {
     {
       question: "Is there parking available at the venues?",
       answer:
-        "Yes, ample parking space is available for all guests at both ASKR Thirumana Mandapam and CSI Church Punnaiyadi Community Hall.",
+        "Yes, ample parking space is available for all guests at both St. James Church (Toovipuram) and ASKR Thirumana Mandapam (Puthugramam).",
     },
     {
-      question: "How do I reach the wedding venues?",
+      question: "How do I reach the wedding venues in Thoothukudi?",
       answer:
-        "Both venues are well-connected by road in Kanyakumari District. You can use the 'View Map' buttons in the Wedding Events section above for exact Google Maps GPS directions directly to ASKR Thirumana Mandapam and CSI Church Punnaiyadi Community Hall.",
+        "Both venues are located in Thoothukudi town and well-connected by road. You can use the 'View Map' buttons in the Wedding Events section above for direct Google Maps GPS navigation to St. James Church and ASKR Thirumana Mandapam.",
     },
   ];
 

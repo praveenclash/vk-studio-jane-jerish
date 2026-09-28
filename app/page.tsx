@@ -41,9 +41,6 @@ export default function Home() {
 
         {/* Travel & Accommodations */}
         <TravelAndAccommodations />
-
-        {/* Frequently Asked Questions */}
-        <Faq />
       </main>
 
       {/* Footer */}

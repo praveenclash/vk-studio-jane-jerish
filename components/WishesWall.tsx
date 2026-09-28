@@ -1,16 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Heart, RefreshCw, MessageSquareHeart, Users, Calendar, Sparkles, ThumbsUp } from "lucide-react";
+import { Heart, RefreshCw, MessageSquareHeart, Sparkles, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 interface Wish {
   id: number;
   name: string;
-  relation: string;
   message: string;
-  attendance: string;
-  guests_count: number;
   created_at: string;
   likes: number;
 }
@@ -74,67 +72,74 @@ export default function WishesWall() {
     }
   };
 
-  const totalGuestsAttending = wishes
-    .filter((w) => w.attendance === "attending")
-    .reduce((acc, curr) => acc + (curr.guests_count || 1), 0);
+  const totalLikes = wishes.reduce((acc, curr) => acc + (curr.likes || 0), 0);
+  const displayedWishes = wishes.slice(0, 3);
 
   return (
     <section id="guestbook" className="py-16 sm:py-24 bg-[#0e0b08] border-t border-[#d4af37]/20 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
+        {/* Header with Title on Left/Center and View All on Right */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center max-w-2xl mx-auto mb-8 sm:mb-12"
+          className="mb-8 sm:mb-12 pb-5 border-b border-[#d4af37]/20"
         >
-          <span className="text-[#d4af37] font-script text-xl sm:text-2xl block mb-1">
-            Warm Blessings
-          </span>
-          <h2 className="font-serif-luxury text-2xl xs:text-3xl sm:text-4xl text-[#fcfbf7] font-normal tracking-wide">
-            Guestbook & Wishes Wall
-          </h2>
-          <div className="flex items-center justify-center gap-3 my-3">
-            <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
-            <Heart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#d4af37] fill-[#d4af37]" />
-            <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
-          </div>
-          <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
-            Real-time messages sent by friends & family from around the world, stored in our database.
-          </p>
-
-          {/* Stats Bar & Refresh Button */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-5 sm:mt-6">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#181410] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#d4af37]/25 shadow-sm text-[11px] sm:text-xs font-semibold text-[#fcfbf7]">
-              <MessageSquareHeart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#d4af37]" />
-              <span>{wishes.length} Wishes Received</span>
+          <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-5 text-center md:text-left">
+            <div>
+              <span className="text-[#d4af37] font-script text-xl sm:text-2xl block mb-1">
+                Warm Blessings
+              </span>
+              <h2 className="font-serif-luxury text-2xl xs:text-3xl sm:text-4xl text-[#fcfbf7] font-normal tracking-wide">
+                Guestbook & Wishes Wall
+              </h2>
+              <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed mt-1 max-w-xl">
+                <span className="italic text-[#f6e29f]">&ldquo;Two lives, two hearts, joined together in friendship, united forever in love.&rdquo;</span> Share your blessings with Jane &amp; Jerish.
+              </p>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#181410] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#d4af37]/25 shadow-sm text-[11px] sm:text-xs font-semibold text-[#fcfbf7]">
-              <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#d4af37]" />
-              <span>{totalGuestsAttending} Confirmed Guests</span>
-            </div>
+            {/* Right side: Stats Badges & View All Button */}
+            <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 sm:gap-3 shrink-0">
+              <div className="inline-flex items-center gap-1.5 bg-[#181410] px-3 py-1.5 rounded-full border border-[#d4af37]/25 shadow-sm text-[11px] sm:text-xs font-semibold text-[#fcfbf7]">
+                <MessageSquareHeart className="w-3.5 h-3.5 text-[#d4af37]" />
+                <span>{wishes.length} Wishes</span>
+              </div>
 
-            <motion.button
-              whileTap={{ scale: 0.94 }}
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="inline-flex items-center gap-1.5 bg-[#181410] hover:bg-[#251e18] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#d4af37]/35 text-[11px] sm:text-xs font-semibold text-[#f6e29f] shadow-sm transition-all touch-manipulation min-h-[34px] cursor-pointer"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin text-[#d4af37]" : "text-[#d4af37]"}`} />
-              <span>Refresh</span>
-            </motion.button>
+              <div className="inline-flex items-center gap-1.5 bg-[#181410] px-3 py-1.5 rounded-full border border-[#d4af37]/25 shadow-sm text-[11px] sm:text-xs font-semibold text-[#fcfbf7]">
+                <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
+                <span>{totalLikes} Hearts</span>
+              </div>
+
+              <motion.button
+                whileTap={{ scale: 0.94 }}
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="inline-flex items-center gap-1 bg-[#181410] hover:bg-[#251e18] px-3 py-1.5 rounded-full border border-[#d4af37]/35 text-[11px] sm:text-xs font-semibold text-[#f6e29f] shadow-sm transition-all touch-manipulation min-h-[34px] cursor-pointer"
+                title="Refresh wishes"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin text-[#d4af37]" : "text-[#d4af37]"}`} />
+              </motion.button>
+
+              {/* View All Button on Right Side */}
+              <Link
+                href="/wishes"
+                className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full gold-gradient-bg text-black font-cinzel font-bold text-xs uppercase tracking-wider shadow-md hover:brightness-110 active:scale-95 transition-all touch-manipulation cursor-pointer group"
+              >
+                <span>View All</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </motion.div>
 
-        {/* Wishes List */}
+        {/* Wishes List (Preview 3 Wishes) */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-12 sm:py-16 gap-3">
             <div className="w-8 h-8 border-3 border-[#d4af37] border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs sm:text-sm text-[#b8ab96] font-medium">Fetching wishes from database...</p>
+            <p className="text-xs sm:text-sm text-[#b8ab96] font-medium">Gathering heartfelt blessings...</p>
           </div>
-        ) : wishes.length === 0 ? (
+        ) : displayedWishes.length === 0 ? (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -154,8 +159,7 @@ export default function WishesWall() {
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {wishes.map((wish, index) => {
-              const isAttending = wish.attendance === "attending";
+            {displayedWishes.map((wish, index) => {
               const isLiked = likedIds[wish.id];
 
               return (
@@ -169,27 +173,12 @@ export default function WishesWall() {
                   className="glass-panel-midnight rounded-2xl p-4 xs:p-5 sm:p-6 shadow-md border border-[#d4af37]/20 hover:border-[#d4af37]/50 transition-all flex flex-col justify-between group overflow-hidden"
                 >
                   <div>
-                    {/* Top row: Name & Relation */}
-                    <div className="flex items-start justify-between gap-2 mb-2.5 sm:mb-3">
-                      <div className="min-w-0 flex-1">
-                        <h4 className="font-serif-luxury text-base sm:text-lg font-semibold text-[#fcfbf7] truncate">
-                          {wish.name}
-                        </h4>
-                        <span className="text-[10px] sm:text-[11px] font-cinzel font-medium text-[#d4af37] tracking-wider uppercase">
-                          {wish.relation || "Guest"}
-                        </span>
-                      </div>
-
-                      {/* Attendance Badge */}
-                      <span
-                        className={`text-[9px] xs:text-[10px] font-semibold uppercase tracking-wider px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full shrink-0 ${
-                          isAttending
-                            ? "bg-emerald-950/70 text-emerald-300 border border-emerald-500/40"
-                            : "bg-stone-900 text-stone-400 border border-stone-700"
-                        }`}
-                      >
-                        {isAttending ? `Attending (${wish.guests_count || 1})` : "Sent Wishes"}
-                      </span>
+                    {/* Top row: Name & Sparkle */}
+                    <div className="flex items-center justify-between gap-2 mb-2.5 sm:mb-3">
+                      <h4 className="font-serif-luxury text-base sm:text-lg font-semibold text-[#fcfbf7] truncate">
+                        {wish.name}
+                      </h4>
+                      <Sparkles className="w-3.5 h-3.5 text-[#d4af37]/60 shrink-0" />
                     </div>
 
                     {/* Message Body */}
@@ -230,6 +219,19 @@ export default function WishesWall() {
                 </motion.div>
               );
             })}
+          </div>
+        )}
+
+        {/* Bottom CTA to View All Wishes */}
+        {wishes.length > 0 && (
+          <div className="mt-8 sm:mt-12 text-center">
+            <Link
+              href="/wishes"
+              className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3 rounded-full border border-[#d4af37]/40 bg-[#181410] hover:bg-[#251e18] text-[#f6e29f] hover:text-[#d4af37] text-xs sm:text-sm font-cinzel font-semibold uppercase tracking-wider shadow-md transition-all touch-manipulation group"
+            >
+              <span>View All {wishes.length} Wishes & Blessings</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform text-[#d4af37]" />
+            </Link>
           </div>
         )}
       </div>

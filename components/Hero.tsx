@@ -1,11 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Heart, Calendar, MapPin, ChevronDown, Sparkles } from "lucide-react";
+import { Heart, Calendar, MapPin, ChevronDown, Sparkles, FileText } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import InvitationCardModal from "./InvitationCardModal";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -57,8 +60,7 @@ export default function Hero() {
         <div
           className="w-full h-full bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85')",
+            backgroundImage: "url('/images/MAD_1926.webp')",
           }}
         />
         {/* Soft luxury dark gradients over image */}
@@ -78,29 +80,45 @@ export default function Hero() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-[#d4af37]/40 text-[#f6e29f] text-[11px] sm:text-xs font-cinzel font-semibold tracking-[0.25em] uppercase mb-4 sm:mb-6 shadow-md"
+          className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-[#d4af37]/40 text-[#f6e29f] text-[11px] sm:text-xs font-cinzel font-semibold tracking-[0.25em] uppercase mb-3 shadow-md"
         >
           <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-[#d4af37]" />
           <span>Save The Date</span>
           <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-[#d4af37]" />
         </motion.div>
 
+        {/* Sacred Scripture from Invitation Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.25 }}
+          className="mb-2 text-center"
+        >
+          <span className="text-sm font-serif text-[#d4af37]">✝</span>
+          <p className="font-serif-luxury italic text-xs xs:text-sm text-[#f6e29f] tracking-wide">
+            &ldquo;The thing proceedeth from the Lord&rdquo;{" "}
+            <span className="font-cinzel text-[10px] text-[#d4af37] not-italic tracking-wider uppercase">
+              (Genesis 24:50)
+            </span>
+          </p>
+        </motion.div>
+
         {/* Subtitle */}
-        <motion.p
+        {/* <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="font-serif-luxury italic text-white/85 text-sm sm:text-lg mb-1 sm:mb-2 tracking-wide px-2"
+          transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif-luxury italic text-white/85 text-sm sm:text-base mb-1 tracking-wide px-2"
         >
-          Together with our parents, we invite you to celebrate
-        </motion.p>
+          Together with our parents, we invite you to celebrate the Holy Matrimony of
+        </motion.p> */}
 
         {/* Couple Names */}
         <motion.h1
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="font-serif-luxury text-3xl xs:text-4xl sm:text-5xl md:text-6xl text-white font-normal tracking-wide my-2 sm:my-3 drop-shadow-md leading-tight inline-flex flex-wrap items-center justify-center gap-2 xs:gap-3 sm:gap-4"
+          className="font-serif-luxury text-3xl xs:text-4xl sm:text-5xl md:text-6xl text-white font-normal tracking-wide my-1.5 sm:my-2 drop-shadow-md leading-tight inline-flex flex-wrap items-center justify-center gap-2 xs:gap-3 sm:gap-4"
         >
           <span>Jane</span>
           <span className="inline-flex items-center justify-center mx-1">
@@ -113,7 +131,7 @@ export default function Hero() {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="w-20 sm:w-28 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent my-2.5 sm:my-3"
+          className="w-20 sm:w-28 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent my-2 sm:my-2.5"
         />
 
         {/* Date & Location */}
@@ -121,17 +139,17 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-white/90 text-xs sm:text-sm mb-7 sm:mb-9 tracking-wider text-center font-cinzel"
+          className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-white/90 text-xs sm:text-sm mb-6 sm:mb-8 tracking-wider text-center font-cinzel"
         >
           <div className="flex items-center gap-2">
             <Calendar className="w-3.5 h-3.5 text-[#d4af37] shrink-0" />
             <span className="font-medium tracking-widest">October 12, 2026</span>
           </div>
           <span className="hidden sm:inline text-[#d4af37]">•</span>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <MapPin className="w-3.5 h-3.5 text-[#d4af37] shrink-0" />
-            <span className="font-medium tracking-wide">ASKR Thirumana Mandapam, Kanyakumari</span>
-          </div>
+            <span className="font-medium tracking-wide">St. James Church &amp; ASKR Mandapam, Thoothukudi</span>
+          </div> */}
         </motion.div>
 
         {/* Live Countdown Timer */}
@@ -139,7 +157,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-lg mx-auto mb-7 sm:mb-9 px-1"
+          className="w-full max-w-lg mx-auto mb-6 sm:mb-8 px-1"
         >
           <p className="text-[#f6e29f]/90 text-[10px] sm:text-xs font-cinzel uppercase tracking-[0.25em] mb-2.5 sm:mb-3">
             Counting Down To Our Forever
@@ -171,22 +189,28 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0"
+          className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 w-full sm:w-auto px-4 sm:px-0"
         >
+          {/* Send Wishes CTA */}
           <a
             href="#rsvp"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-full gold-gradient-bg text-black font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-[46px]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 rounded-full gold-gradient-bg text-black font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-[44px]"
           >
             <Heart className="w-4 h-4 fill-black" />
-          Send Wishes
+            Send Wishes
           </a>
-          <a
-            href="#events"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-full bg-white/10 backdrop-blur-md border border-[#d4af37]/45 text-[#f6e29f] hover:bg-[#d4af37]/20 font-semibold text-xs sm:text-sm uppercase tracking-wider active:scale-95 transition-all min-h-[46px]"
+
+          {/* View Official Invitation Card Button */}
+          <button
+            type="button"
+            onClick={() => setIsCardModalOpen(true)}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-full bg-[#181410] border border-[#d4af37]/60 text-[#f6e29f] hover:bg-[#d4af37]/20 font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg active:scale-95 transition-all min-h-[44px] cursor-pointer touch-manipulation"
           >
-            <Calendar className="w-4 h-4" />
-            View Schedule
-          </a>
+            <FileText className="w-4 h-4 text-[#d4af37]" />
+            <span>Invitation Card</span>
+          </button>
+
+         
         </motion.div>
       </motion.div>
 
@@ -198,6 +222,12 @@ export default function Hero() {
         <span className="text-[10px] uppercase tracking-widest text-white/80 font-cinzel">Scroll Down</span>
         <ChevronDown className="w-3.5 h-3.5 animate-bounce text-white/80" />
       </a>
+
+      {/* Official Invitation Card Modal */}
+      <InvitationCardModal
+        isOpen={isCardModalOpen}
+        onClose={() => setIsCardModalOpen(false)}
+      />
     </section>
   );
 }

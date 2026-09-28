@@ -30,10 +30,7 @@ import {
 interface WishRecord {
   id: number;
   name: string;
-  relation: string;
   message: string;
-  attendance: string;
-  guests_count: number;
   created_at: string;
   likes: number;
 }
@@ -51,7 +48,6 @@ export default function AdminPage() {
   const [records, setRecords] = useState<WishRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
   const [statusMsg, setStatusMsg] = useState("");
 
   // Manual Add Modal State
@@ -60,9 +56,6 @@ export default function AdminPage() {
   const [addError, setAddError] = useState("");
   const [addForm, setAddForm] = useState({
     name: "",
-    relation: "Family",
-    attendance: "attending",
-    guests_count: 1,
     message: "",
   });
 
@@ -181,9 +174,6 @@ export default function AdminPage() {
         setShowAddModal(false);
         setAddForm({
           name: "",
-          relation: "Family",
-          attendance: "attending",
-          guests_count: 1,
           message: "",
         });
 
@@ -206,44 +196,32 @@ export default function AdminPage() {
       return;
     }
 
-    const headers = ["ID", "Name", "Relation", "Attendance", "Guests Count", "Likes", "Created At", "Message"];
+    const headers = ["ID", "Name", "Blessing Message", "Likes", "Created At"];
     const rows = records.map((r) => [
       r.id,
       `"${r.name.replace(/"/g, '""')}"`,
-      `"${r.relation.replace(/"/g, '""')}"`,
-      r.attendance,
-      r.guests_count || 1,
+      `"${r.message.replace(/"/g, '""')}"`,
       r.likes || 0,
       `"${r.created_at}"`,
-      `"${r.message.replace(/"/g, '""')}"`,
     ]);
 
     const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `wedding_wishes_and_rsvp_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute("download", `wedding_wishes_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
   const filteredRecords = records.filter((r) => {
-    const matchesSearch =
+    return (
       r.name.toLowerCase().includes(search.toLowerCase()) ||
-      r.message.toLowerCase().includes(search.toLowerCase()) ||
-      r.relation.toLowerCase().includes(search.toLowerCase());
-
-    if (filter === "attending") return matchesSearch && r.attendance === "attending";
-    if (filter === "declined") return matchesSearch && r.attendance === "regretfully_decline";
-    return matchesSearch;
+      r.message.toLowerCase().includes(search.toLowerCase())
+    );
   });
 
-  const totalConfirmedGuests = records
-    .filter((r) => r.attendance === "attending")
-    .reduce((acc, curr) => acc + (curr.guests_count || 1), 0);
-
-  const totalDeclined = records.filter((r) => r.attendance === "regretfully_decline").length;
   const totalLikes = records.reduce((acc, curr) => acc + (curr.likes || 0), 0);
 
   // If initial auth check is in progress
@@ -406,7 +384,7 @@ export default function AdminPage() {
                 <div className="flex items-center gap-2">
                   <Database className="w-4 sm:w-5 h-4 sm:h-5 text-[#d4af37] shrink-0" />
                   <h1 className="font-serif-luxury text-xl xs:text-2xl sm:text-3xl font-normal text-white leading-tight">
-                    Wedding SQL Database & RSVP Manager
+                    Wedding SQL Database & Wishes Manager
                   </h1>
                 </div>
                 <p className="text-[11px] sm:text-xs text-[#b8ab96] mt-0.5 break-all">
@@ -424,7 +402,7 @@ export default function AdminPage() {
               className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl gold-gradient-bg text-black text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all min-h-[40px] touch-manipulation cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
-              <span>Add Wish / RSVP</span>
+              <span>Add Wish</span>
             </button>
 
             {/* Export CSV */}
@@ -457,49 +435,38 @@ export default function AdminPage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
-          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-[#d4af37]/25 shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="glass-panel-midnight p-4 sm:p-5 rounded-2xl border border-[#d4af37]/25 shadow-sm">
             <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
               <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-[#ded6ca]">Total Wishes</span>
-              <MessageSquareHeart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#d4af37]" />
+              <MessageSquareHeart className="w-4 h-4 text-[#d4af37]" />
             </div>
             <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-white">
               {records.length}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">In SQL database</div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Stored in SQLite database</div>
           </div>
 
-          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-emerald-500/30 shadow-sm">
+          <div className="glass-panel-midnight p-4 sm:p-5 rounded-2xl border border-rose-500/30 shadow-sm">
             <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-emerald-400">Attending</span>
-              <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-emerald-400">
-              {totalConfirmedGuests}
-            </div>
-            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Confirmed guests headcount</div>
-          </div>
-
-          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-stone-700 shadow-sm">
-            <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-stone-400">Declined</span>
-              <XCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-stone-400" />
-            </div>
-            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-stone-400">
-              {totalDeclined}
-            </div>
-            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Sent heartfelt regrets</div>
-          </div>
-
-          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-rose-500/30 shadow-sm">
-            <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-rose-300">Reactions</span>
-              <Heart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-rose-400 fill-rose-400" />
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-rose-300">Total Reactions</span>
+              <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
             </div>
             <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-rose-400">
               {totalLikes}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Heart likes by visitors</div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Heart blessings received</div>
+          </div>
+
+          <div className="glass-panel-midnight p-4 sm:p-5 rounded-2xl border border-emerald-500/30 shadow-sm">
+            <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-emerald-400">SQL Status</span>
+              <Database className="w-4 h-4 text-emerald-400" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-emerald-400">
+              Active
+            </div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">wedding.db &bull; wishes</div>
           </div>
         </div>
 
@@ -511,38 +478,19 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Search & Filter Toolbar */}
-        <div className="glass-panel-midnight p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/25 shadow-sm mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-stretch sm:items-center">
-          <div className="relative w-full sm:w-80">
+        {/* Search Toolbar */}
+        <div className="glass-panel-midnight p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/25 shadow-sm mb-6">
+          <div className="relative w-full max-w-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
               <Search className="w-4 h-4 text-[#d4af37]" />
             </div>
             <input
               type="text"
-              placeholder="Search name, relation, message..."
+              placeholder="Search guest name or blessing message..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl border border-[#d4af37]/30 text-xs focus:outline-none focus:border-[#d4af37] bg-[#14100c] text-white placeholder:text-stone-500"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[#d4af37]/30 text-xs sm:text-sm focus:outline-none focus:border-[#d4af37] bg-[#14100c] text-white placeholder:text-stone-500"
             />
-          </div>
-
-          <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-between sm:justify-start">
-            <span className="text-xs font-semibold text-[#ded6ca] shrink-0">Filter:</span>
-            <div className="flex items-center gap-1.5">
-              {["all", "attending", "declined"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setFilter(tab)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all touch-manipulation min-h-[32px] cursor-pointer ${
-                    filter === tab
-                      ? "gold-gradient-bg text-black font-semibold shadow-sm"
-                      : "bg-[#181410] text-[#cfc5b6] hover:text-white border border-[#d4af37]/20"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
 
@@ -553,14 +501,11 @@ export default function AdminPage() {
             <span>👉</span>
           </div>
           <div className="overflow-x-auto no-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
-            <table className="w-full text-left text-xs min-w-[700px]">
+            <table className="w-full text-left text-xs min-w-[600px]">
               <thead className="bg-[#14100c] border-b border-[#d4af37]/25 text-[#ded6ca] font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
                 <tr>
                   <th className="py-3.5 px-4 font-cinzel">#ID</th>
                   <th className="py-3.5 px-4 font-cinzel">Guest Name</th>
-                  <th className="py-3.5 px-4 font-cinzel">Relation</th>
-                  <th className="py-3.5 px-4 font-cinzel">RSVP Status</th>
-                  <th className="py-3.5 px-4 font-cinzel">Guests</th>
                   <th className="py-3.5 px-4 font-cinzel">Blessing Message</th>
                   <th className="py-3.5 px-4 font-cinzel">Date & Time</th>
                   <th className="py-3.5 px-4 font-cinzel">Likes</th>
@@ -570,7 +515,7 @@ export default function AdminPage() {
               <tbody className="divide-y divide-[#d4af37]/15">
                 {loading ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-[#b8ab96]">
+                    <td colSpan={6} className="py-12 text-center text-[#b8ab96]">
                       <div className="inline-flex items-center gap-2">
                         <div className="w-4 h-4 border-2 border-[#d4af37] border-t-transparent rounded-full animate-spin" />
                         <span>Loading data from SQL database...</span>
@@ -579,13 +524,12 @@ export default function AdminPage() {
                   </tr>
                 ) : filteredRecords.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-[#b8ab96]">
-                      No records found in database. Click &ldquo;Add Wish / RSVP&rdquo; above to create one!
+                    <td colSpan={6} className="py-12 text-center text-[#b8ab96]">
+                      No records found in database. Click &ldquo;Add Wish&rdquo; above to create one!
                     </td>
                   </tr>
                 ) : (
                   filteredRecords.map((r) => {
-                    const isAttending = r.attendance === "attending";
                     return (
                       <tr key={r.id} className="hover:bg-stone-900/60 transition-colors">
                         <td className="py-3.5 px-4 font-mono font-medium text-[#d4af37]">
@@ -594,34 +538,7 @@ export default function AdminPage() {
                         <td className="py-3.5 px-4 font-semibold text-white">
                           {r.name}
                         </td>
-                        <td className="py-3.5 px-4 text-stone-300">
-                          <span className="bg-[#1a140f] px-2 py-0.5 rounded text-[11px] border border-[#d4af37]/20 text-[#f6e29f]">
-                            {r.relation}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${
-                              isAttending
-                                ? "bg-emerald-950/70 text-emerald-300 border border-emerald-500/40"
-                                : "bg-stone-900 text-stone-400 border border-stone-700"
-                            }`}
-                          >
-                            {isAttending ? (
-                              <>
-                                <CheckCircle className="w-3 h-3 text-emerald-400" /> Attending
-                              </>
-                            ) : (
-                              <>
-                                <XCircle className="w-3 h-3 text-stone-400" /> Declined
-                              </>
-                            )}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 font-semibold text-stone-200">
-                          {isAttending ? r.guests_count || 1 : "-"}
-                        </td>
-                        <td className="py-3.5 px-4 max-w-xs text-[#cfc5b6] italic">
+                        <td className="py-3.5 px-4 max-w-sm text-[#cfc5b6] italic">
                           <p className="line-clamp-2" title={r.message}>
                             &ldquo;{r.message}&rdquo;
                           </p>
@@ -679,10 +596,10 @@ export default function AdminPage() {
             <div className="text-center mb-5">
               <span className="text-[#d4af37] font-script text-xl block mb-0.5">Admin Action</span>
               <h2 className="font-serif-luxury text-xl sm:text-2xl text-white font-normal">
-                Add Wish / RSVP Manually
+                Add Wish Manually
               </h2>
               <p className="text-xs text-[#b8ab96] mt-1">
-                Save a guest&apos;s blessing or RSVP directly into the SQLite database.
+                Save a guest&apos;s blessing directly into the SQLite database.
               </p>
             </div>
 
@@ -710,75 +627,13 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
-                    Relation / Guest Of
-                  </label>
-                  <select
-                    value={addForm.relation}
-                    onChange={(e) => setAddForm({ ...addForm, relation: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white"
-                  >
-                    <option value="Family" className="bg-[#14100c]">Family & Relative</option>
-                    <option value="Friend" className="bg-[#14100c]">Friend of Bride / Groom</option>
-                    <option value="Colleague" className="bg-[#14100c]">Colleague / Work</option>
-                    <option value="Well-wisher" className="bg-[#14100c]">Well-Wisher & Neighbor</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
-                    Number of Guests
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="20"
-                    value={addForm.guests_count}
-                    onChange={(e) => setAddForm({ ...addForm, guests_count: parseInt(e.target.value) || 1 })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
-                  Attendance Status
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setAddForm({ ...addForm, attendance: "attending" })}
-                    className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
-                      addForm.attendance === "attending"
-                        ? "gold-gradient-bg text-black border-[#d4af37]"
-                        : "bg-[#14100c] text-[#cfc5b6] border-[#d4af37]/30"
-                    }`}
-                  >
-                    🎉 Attending
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAddForm({ ...addForm, attendance: "regretfully_decline" })}
-                    className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all ${
-                      addForm.attendance === "regretfully_decline"
-                        ? "bg-stone-800 text-white border-stone-600"
-                        : "bg-[#14100c] text-[#cfc5b6] border-stone-700"
-                    }`}
-                  >
-                    💌 Can&apos;t Make It
-                  </button>
-                </div>
-              </div>
-
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
                   Wedding Blessing & Message *
                 </label>
                 <textarea
                   required
-                  rows={3}
+                  rows={4}
                   placeholder="Enter their wedding wishes for Jane & Jerish..."
                   value={addForm.message}
                   onChange={(e) => setAddForm({ ...addForm, message: e.target.value })}

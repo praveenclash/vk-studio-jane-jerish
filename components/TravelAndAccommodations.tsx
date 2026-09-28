@@ -7,25 +7,25 @@ import { motion } from "framer-motion";
 export default function TravelAndAccommodations() {
   const accommodations = [
     {
-      name: "Sparsa Resort Kanyakumari",
+      name: "Regency Tuticorin by GRT Hotels",
       stars: "4 Star Luxury",
-      distance: "Near Sunset Point / Beach",
-      address: "Beach Road, Kanyakumari, Tamil Nadu",
-      link: "https://www.sparsaresorts.com",
+      distance: "Near City Center & Venues",
+      address: "Palayamkottai Road, Thoothukudi, Tamil Nadu",
+      link: "https://www.grthotels.com",
     },
     {
-      name: "The Gopinivas Grand",
-      stars: "Premium Hotel",
-      distance: "5 mins to Beach & Transit",
-      address: "Near Seashore, Kanyakumari, Tamil Nadu",
-      link: "https://www.thegopinivasgrand.com",
+      name: "SRM Hotel Thoothukudi",
+      stars: "Premium Business Hotel",
+      distance: "10 mins to St. James Church & Mandapam",
+      address: "P&T Colony, Thoothukudi, Tamil Nadu",
+      link: "https://www.srmhotels.com",
     },
     {
-      name: "Annai Resorts & Spa",
-      stars: "Luxury Resort",
-      distance: "Prime Coastal Location",
-      address: "Kovalam Road, Kanyakumari, Tamil Nadu",
-      link: "https://www.annairesorts.com",
+      name: "Hotel DSF Grand Plaza",
+      stars: "Luxury Stay & Dining",
+      distance: "Close to Railway & Bus Terminus",
+      address: "V.E. Road, Thoothukudi, Tamil Nadu",
+      link: "https://www.hoteldsf.com",
     },
   ];
 
@@ -44,7 +44,7 @@ export default function TravelAndAccommodations() {
             Guest Guide
           </span>
           <h2 className="font-serif-luxury text-2xl xs:text-3xl sm:text-4xl text-[#fcfbf7] font-normal tracking-wide">
-            Travel & Accommodations
+            Travel &amp; Accommodations
           </h2>
           <div className="flex items-center justify-center gap-3 my-3">
             <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
@@ -52,7 +52,7 @@ export default function TravelAndAccommodations() {
             <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
           </div>
           <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
-            For our cherished friends and family travelling from out of town to Kanyakumari, we have compiled helpful travel directions and stay options.
+            For our cherished friends and family travelling from out of town to Thoothukudi, we have compiled helpful travel directions and stay options.
           </p>
         </motion.div>
 
@@ -61,18 +61,18 @@ export default function TravelAndAccommodations() {
           {[
             {
               icon: Plane,
-              title: "Trivandrum Airport (TRV)",
-              desc: "Approx. 85-90 km to Kanyakumari. 24/7 prepaid airport cabs and express buses are conveniently available.",
+              title: "Tuticorin Airport (TCR)",
+              desc: "Direct flights from Chennai & Bangalore. Just 15-20 mins (14 km) drive to wedding venues and city center.",
             },
             {
               icon: Train,
-              title: "Kanyakumari & Nagercoil Stations",
-              desc: "Kanyakumari (CAPE) & Nagercoil Junction (NCJ) have direct express trains from Chennai, Bangalore, and across India.",
+              title: "Thoothukudi Station (TN)",
+              desc: "Direct express trains (Pearl City Express, etc.) connect Thoothukudi directly with Chennai, Madurai, and all major cities.",
             },
             {
               icon: Car,
               title: "Road & Venue Parking",
-              desc: "Ample parking space is provided at both ASKR Thirumana Mandapam and CSI Church Punnaiyadi Community Hall.",
+              desc: "Convenient parking facilities are provided at both St. James Church (Toovipuram) and ASKR Mandapam (Puthugramam).",
             },
           ].map((item, idx) => {
             const Icon = item.icon;
