@@ -30,6 +30,20 @@ export default function Hero() {
     seconds: 0,
   });
 
+  const heroImages = [
+    "/images/MAD_1926.webp",
+    "/images/MAD_1873.webp"
+  ];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Automatic slideshow cycle every 4.5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
+
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -52,20 +66,44 @@ export default function Hero() {
 
   return (
     <section ref={containerRef} className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
-      {/* Background Image with smooth scroll parallax inside fixed window */}
+      {/* Background Image Slideshow with smooth crossfade and scroll parallax */}
       <motion.div
         style={{ y: backgroundY, scale: backgroundScale }}
         className="absolute inset-0 will-change-transform"
       >
-        <div
-          className="w-full h-full bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url('/images/MAD_1926.webp')",
-          }}
-        />
+        {heroImages.map((src, idx) => (
+          <div
+            key={src}
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out ${
+              idx === currentImageIndex
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-105 pointer-events-none"
+            }`}
+            style={{
+              backgroundImage: `url('${src}')`,
+            }}
+          />
+        ))}
         {/* Soft luxury dark gradients over image */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-[#0b0907]" />
       </motion.div>
+
+      {/* Subtle Slide Indicators */}
+      <div className="absolute bottom-6 sm:bottom-8 right-4 sm:right-8 z-20 hidden xs:flex items-center gap-1.5">
+        {heroImages.map((_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => setCurrentImageIndex(idx)}
+            className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer touch-manipulation ${
+              idx === currentImageIndex
+                ? "w-6 bg-[#d4af37] shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                : "w-1.5 bg-white/30 hover:bg-white/60"
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
+      </div>
 
       {/* Decorative floral or sparkling aura */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#d4af37]/20 rounded-full blur-3xl pointer-events-none" />
