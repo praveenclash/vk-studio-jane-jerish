@@ -21,6 +21,12 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.7;
+    }
+  }, []);
+
   const toggleMusic = () => {
     if (!audioRef.current) return;
     if (isPlayingMusic) {
@@ -47,12 +53,14 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Background audio player (soft ambient royalty-free piano/acoustic) */}
+      {/* Background audio player - Anbil Avan Christian Wedding Song */}
       <audio
         ref={audioRef}
         loop
-        src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-113337.mp3"
-        preload="none"
+        src="/music/wedding-song.mp3"
+        preload="metadata"
+        onPlay={() => setIsPlayingMusic(true)}
+        onPause={() => setIsPlayingMusic(false)}
       />
 
       <header
@@ -149,7 +157,29 @@ export default function Navbar() {
                     <span className="text-[#d4af37] text-xs">→</span>
                   </a>
                 ))}
-                <div className="pt-3 flex flex-col gap-2">
+                <div className="pt-3 flex flex-col gap-2.5">
+                  <button
+                    type="button"
+                    onClick={toggleMusic}
+                    className={`w-full py-2.5 px-4 rounded-full text-xs font-semibold uppercase tracking-wider border flex items-center justify-center gap-2 min-h-[44px] touch-manipulation transition-all ${
+                      isPlayingMusic
+                        ? "bg-[#d4af37] text-black border-[#d4af37] shadow-lg"
+                        : "bg-[#181410] text-[#f6e29f] border-[#d4af37]/40 hover:bg-[#d4af37]/15"
+                    }`}
+                  >
+                    {isPlayingMusic ? (
+                      <>
+                        <Volume2 className="w-4 h-4 text-black" />
+                        <span>Music Playing (Tap to Pause)</span>
+                      </>
+                    ) : (
+                      <>
+                        <VolumeX className="w-4 h-4 text-[#d4af37]" />
+                        <span>Play Wedding Music (Anbil Avan)</span>
+                      </>
+                    )}
+                  </button>
+
                   <a
                     href="#rsvp"
                     onClick={() => setMobileMenuOpen(false)}

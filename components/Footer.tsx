@@ -4,6 +4,26 @@ import React from "react";
 import { Heart, ArrowUp } from "lucide-react";
 import { motion } from "framer-motion";
 
+function InstagramIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      stroke="currentColor"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
 export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -43,12 +63,29 @@ export default function Footer() {
           <a href="#travel" className="py-1 px-1 hover:text-[#d4af37] transition-colors">Travel</a>
         </div>
 
+        <p className="font-serif-luxury italic text-xs xs:text-sm text-[#f6e29f]/90 mb-6 max-w-md mx-auto px-2">
+          &ldquo;Two lives, two hearts, joined in love, united forever by God.&rdquo;
+        </p>
+
         <div className="w-20 sm:w-24 h-[1px] bg-[#d4af37]/40 mb-6" />
 
         {/* Closing note */}
-        <p className="text-[11px] sm:text-xs text-stone-400 flex items-center justify-center gap-1.5 mb-6 sm:mb-8 text-center px-2">
-          Crafted with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 shrink-0" /> for Jane & Jerish • VK Studio
-        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-stone-400 mb-6 sm:mb-8 text-center px-2">
+          <span className="flex items-center gap-1.5">
+            Crafted with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 shrink-0" /> for Jane &amp; Jerish
+          </span>
+          <span className="hidden sm:inline text-[#d4af37]/60">•</span>
+          <a
+            href="https://www.instagram.com/vk_f_o_t_o_s_/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[#d4af37] hover:text-[#f6e29f] font-semibold underline underline-offset-4 decoration-[#d4af37]/40 hover:decoration-[#d4af37] transition-all group/link"
+            title="Follow VK Fotos on Instagram"
+          >
+            <InstagramIcon className="w-3.5 h-3.5 text-[#d4af37] group-hover/link:scale-110 transition-transform" />
+            <span>VK Fotos</span>
+          </a>
+        </div>
 
         {/* Back to top button */}
         <motion.button

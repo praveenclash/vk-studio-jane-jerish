@@ -95,7 +95,7 @@ export default function WishesWall() {
                 Guestbook & Wishes Wall
               </h2>
               <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed mt-1 max-w-xl">
-                <span className="italic text-[#f6e29f]">&ldquo;Two lives, two hearts, joined together in friendship, united forever in love.&rdquo;</span> Share your blessings with Jane &amp; Jerish.
+                <span className="italic text-[#f6e29f]">&ldquo;Two hearts, one love, forever blessed.&rdquo;</span> Heartfelt blessings from our dearest family and friends.
               </p>
             </div>
 

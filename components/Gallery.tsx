@@ -149,7 +149,7 @@ export default function Gallery() {
             <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
           </div>
           <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
-            A glimpse into our favorite memories and beautiful snapshots as we celebrate our holy union.
+            Every picture holds a gentle smile, a quiet prayer, and a promise of forever.
           </p>
 
           {/* Filter Tabs */}

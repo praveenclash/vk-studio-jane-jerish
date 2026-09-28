@@ -28,7 +28,7 @@ export default function Couple() {
           <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
         </div>
         <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
-          &ldquo;When I saw you I fell in love, and you smiled because you knew.&rdquo; Two souls destined to walk together through every season of life.
+          &ldquo;I loved you from the moment I saw you, and forever isn&apos;t long enough.&rdquo; Two hearts united by God&apos;s gentle hand.
         </p>
       </motion.div>
 
@@ -63,7 +63,7 @@ export default function Couple() {
               Son of Rev. D. Jeyasekaran (IEM) &amp; Mrs. C. Rathinam Jeyasekaran (IEM)
             </p>
             <p className="text-[#d4c9b9] text-xs sm:text-sm leading-relaxed italic mb-4">
-              &ldquo;Jane brings warmth, spontaneous laughter, and tranquility to my life. Loving her has been the easiest and most beautiful decision I have ever made.&rdquo;
+              &ldquo;Jane is the light of my life. Her gentle smile brings peace to my heart, and loving her is the sweetest blessing I will cherish forever.&rdquo;
             </p>
             <div className="inline-flex flex-wrap items-center justify-center gap-1.5 text-[11px] sm:text-xs text-[#f6e29f] bg-[#1a140f] px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-[#d4af37]/30 max-w-full">
               <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 shrink-0 text-[#d4af37]" />
@@ -101,7 +101,7 @@ export default function Couple() {
               Daughter of Mr. C. Johnson (B.Com., M.A.) &amp; Mrs. R. Geetha Johnson (M.A., M.Ed., Rtd. H.M)
             </p>
             <p className="text-[#d4c9b9] text-xs sm:text-sm leading-relaxed italic mb-4">
-              &ldquo;Jerish is my safe harbor, my biggest cheerleader, and my favorite adventure partner. I cannot wait to spend all my tomorrows by his side.&rdquo;
+              &ldquo;Jerish is my answered prayer and my safest haven. With him, every single day feels like home, and I cannot wait for all our tomorrows.&rdquo;
             </p>
             <div className="inline-flex flex-wrap items-center justify-center gap-1.5 text-[11px] sm:text-xs text-[#f6e29f] bg-[#1a140f] px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-[#d4af37]/30 max-w-full">
               <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 shrink-0 text-[#d4af37]" />

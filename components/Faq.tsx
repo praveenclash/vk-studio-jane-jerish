@@ -9,34 +9,29 @@ export default function Faq() {
 
   const faqs = [
     {
-      question: "What is the dress code for the events?",
+      question: "What is the dress code for the celebrations?",
       answer:
-        "For Engagement (11.10.2026) at ASKR Mandapam: Festive Ethnic, Silk Sarees or Blazers. For Holy Matrimony (12.10.2026) at St. James Church: Traditional silk sarees, dhotis, or formal suits. For the Wedding Feast & Function: Elegant traditional or formal wear.",
+        "For Engagement (Oct 11): Festive ethnic wear, silk sarees, or suits. For Holy Matrimony & Feast (Oct 12): Traditional silk sarees, dhotis, or elegant formal attire.",
     },
     {
-      question: "Can I bring a Plus One or additional family members?",
+      question: "Can I bring my family and children?",
       answer:
-        "Yes, absolutely! Please make sure to indicate the total number of guests attending when submitting your RSVP form above so we can ensure comfortable seating and hospitality.",
-    },
-    {
-      question: "Are children welcome to the ceremonies?",
-      answer:
-        "Yes, children and little ones are dearly loved and welcome to join the joyous celebrations!",
+        "Yes, absolutely! Your beloved family and little ones are warmly welcome to join in every joyous moment with us.",
     },
     {
       question: "Is there any gift policy?",
       answer:
-        "Your presence, prayers, and heartfelt blessings are our greatest gift. Having you celebrate this milestone with us is all we ask for!",
+        "Your love, prayers, and heartfelt presence are the greatest gifts we could ever ask for. That is all we truly wish for!",
     },
     {
-      question: "Is there parking available at the venues?",
+      question: "Is parking available at the venues?",
       answer:
-        "Yes, ample parking space is available for all guests at both St. James Church (Toovipuram) and ASKR Thirumana Mandapam (Puthugramam).",
+        "Yes, ample and convenient parking space is available at both St. James Church (Toovipuram) and ASKR Mandapam (Puthugramam).",
     },
     {
-      question: "How do I reach the wedding venues in Thoothukudi?",
+      question: "How do I reach the wedding venues?",
       answer:
-        "Both venues are located in Thoothukudi town and well-connected by road. You can use the 'View Map' buttons in the Wedding Events section above for direct Google Maps GPS navigation to St. James Church and ASKR Thirumana Mandapam.",
+        "Both venues are located right in Thoothukudi town. You can tap the 'View Map' buttons in the Events section above for one-click Google Maps GPS navigation.",
     },
   ];
 

@@ -94,7 +94,7 @@ export default function RsvpAndWishes() {
             <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
           </div>
           <p className="text-[#b8ab96] text-xs sm:text-sm px-2">
-            <span className="italic text-[#f6e29f]">&ldquo;Love is not just looking at each other, it&apos;s looking in the same direction.&rdquo;</span> Share your warm blessings for the happy couple.
+            <span className="italic text-[#f6e29f]">&ldquo;Where there is love, there is God&apos;s blessing.&rdquo;</span> Your sweet words and prayers will be forever cherished in our hearts.
           </p>
         </div>
 

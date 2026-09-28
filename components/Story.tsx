@@ -11,31 +11,31 @@ export default function Story() {
       year: "June 21, 2026",
       title: "First Met in Kanyakumari",
       description:
-        "A fateful and magical day by the scenic shores of Kanyakumari where the three seas embrace. What started with warm greetings blossomed immediately into an effortless connection of shared values, smiles, and heartfelt conversation.",
+        "By the calm shores of Kanyakumari, two lives crossed paths. A simple hello, a warm smile, and our hearts instantly knew — this was where our story begins.",
       icon: Coffee,
       image: "/images/MAD_1873.webp",
     },
     {
       year: "August 2026",
-      title: "Growing Together & Cherished Moments",
+      title: "Falling in Love Every Day",
       description:
-        "Through thoughtful discussions about life, family, and future dreams, every passing day made it crystal clear — we were meant to walk through life's every season together hand in hand.",
+        "Through late-night talks, quiet prayers, and shared dreams, friendship gently turned into a love that feels like home.",
       icon: Compass,
       image: "/images/MAD_1721.webp",
     },
     {
       year: "September 19, 2026",
-      title: "Pre-Wedding by Kanyakumari Beach",
+      title: "Pre-Wedding Whispers",
       description:
-        "Along the golden sands and sea breeze of Kanyakumari Beach, we celebrated our pre-wedding moments with laughter and joyous anticipation for the sacred vows to come.",
+        "With golden sands and sunset skies as our witness, we held hands and promised to stand by each other through all of life's seasons.",
       icon: Gem,
       image: "/images/MAD_1882.webp",
     },
     {
       year: "October 12, 2026",
-      title: "The Big Day — Forever Begins!",
+      title: "Our Sacred Covenant",
       description:
-        "Surrounded by our beloved parents, family, and well-wishers at ASKR Thirumana Mandapam and CSI Church Punnaiyadi Community Hall, we make our sacred covenant in holy matrimony.",
+        "Surrounded by our loved ones and guided by God's grace, two hearts become one forever. Today, our beautiful forever begins.",
       icon: Star,
       image: "/images/MAD_1740.webp",
     },
@@ -64,7 +64,7 @@ export default function Story() {
             <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
           </div>
           <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
-            Every love story is beautiful, but ours is our absolute favorite. Here are the unforgettable chapters leading to our wedding day.
+            Every love story is special, but ours is our favorite miracle. Here are the sweet moments that brought us together.
           </p>
         </motion.div>
 

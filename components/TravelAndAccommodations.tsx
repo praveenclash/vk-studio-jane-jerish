@@ -52,7 +52,7 @@ export default function TravelAndAccommodations() {
             <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
           </div>
           <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
-            For our cherished friends and family travelling from out of town to Thoothukudi, we have compiled helpful travel directions and stay options.
+            Traveling to celebrate with us? Here are simple travel directions and cozy hotel stays in Thoothukudi to make your trip comfortable.
           </p>
         </motion.div>
 
@@ -62,17 +62,17 @@ export default function TravelAndAccommodations() {
             {
               icon: Plane,
               title: "Tuticorin Airport (TCR)",
-              desc: "Direct flights from Chennai & Bangalore. Just 15-20 mins (14 km) drive to wedding venues and city center.",
+              desc: "Daily direct flights from Chennai & Bengaluru. A quick 15-minute drive directly to the wedding venues.",
             },
             {
               icon: Train,
               title: "Thoothukudi Station (TN)",
-              desc: "Direct express trains (Pearl City Express, etc.) connect Thoothukudi directly with Chennai, Madurai, and all major cities.",
+              desc: "Comfortable direct express trains connecting Chennai, Madurai, and all major stations into town.",
             },
             {
               icon: Car,
               title: "Road & Venue Parking",
-              desc: "Convenient parking facilities are provided at both St. James Church (Toovipuram) and ASKR Mandapam (Puthugramam).",
+              desc: "Spacious, hassle-free parking arranged for all guests at both St. James Church and ASKR Mandapam.",
             },
           ].map((item, idx) => {
             const Icon = item.icon;

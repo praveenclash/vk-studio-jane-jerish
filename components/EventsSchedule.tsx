@@ -9,7 +9,7 @@ export default function EventsSchedule() {
   const events = [
     {
       title: "Engagement Ceremony",
-      tagline: "Rings Exchanged & Joyous Fellowship",
+      tagline: "Exchanging Rings & Lifelong Promises",
       date: "Sunday, October 11, 2026",
       time: "06:30 PM Onwards",
       venue: "ASKR Thirumana Mandapam",
@@ -21,7 +21,7 @@ export default function EventsSchedule() {
     },
     {
       title: "Holy Matrimony Service",
-      tagline: "Sacred Covenant & Church Solemnization",
+      tagline: "Sacred Vows in God's Holy Presence",
       date: "Monday, October 12, 2026",
       time: "10:00 AM Sharp",
       venue: "St. James Church",
@@ -34,7 +34,7 @@ export default function EventsSchedule() {
     },
     {
       title: "Wedding Feast & Function",
-      tagline: "Grand Lunch Banquet & Family Felicitations",
+      tagline: "A Celebration of Love, Family & Food",
       date: "Monday, October 12, 2026",
       time: "Followed Immediately After Church Service",
       venue: "ASKR Thirumana Mandapam",
@@ -60,7 +60,7 @@ export default function EventsSchedule() {
           Celebrate With Us
         </span>
         <h2 className="font-serif-luxury text-2xl xs:text-3xl sm:text-4xl text-[#fcfbf7] font-normal tracking-wide">
-          Wedding Events & Schedule
+          Wedding Events &amp; Schedule
         </h2>
         <div className="flex items-center justify-center gap-3 my-3">
           <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
@@ -68,7 +68,7 @@ export default function EventsSchedule() {
           <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
         </div>
         <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
-          Please join us in each celebration as we step into this sacred chapter. Kindly find the timings and venues below.
+          Your presence and prayers mean the world to us. Please join us as we begin our new life together.
         </p>
       </motion.div>
 
