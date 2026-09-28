@@ -2,122 +2,141 @@
 
 import React from "react";
 import { Plane, Train, Hotel, Car, MapPin, ExternalLink, Heart } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function TravelAndAccommodations() {
   const accommodations = [
     {
-      name: "The Leela Palace Chennai",
-      stars: "5 Star Luxury",
-      distance: "0.2 km from Sangeet Venue",
-      address: "Adyar Sea Face, MRC Nagar, Chennai",
-      link: "https://www.theleela.com",
+      name: "Sparsa Resort Kanyakumari",
+      stars: "4 Star Luxury",
+      distance: "Near Sunset Point / Beach",
+      address: "Beach Road, Kanyakumari, Tamil Nadu",
+      link: "https://www.sparsaresorts.com",
     },
     {
-      name: "ITC Grand Chola",
-      stars: "5 Star Luxury",
-      distance: "At the Reception Venue",
-      address: "Anna Salai, Guindy, Chennai",
-      link: "https://www.itchotels.com",
+      name: "The Gopinivas Grand",
+      stars: "Premium Hotel",
+      distance: "5 mins to Beach & Transit",
+      address: "Near Seashore, Kanyakumari, Tamil Nadu",
+      link: "https://www.thegopinivasgrand.com",
     },
     {
-      name: "Radisson Blu Hotel GRT",
-      stars: "4 Star Premium",
-      distance: "10 mins from Airport / 15 mins to Venues",
-      address: "GST Road, St. Thomas Mount, Chennai",
-      link: "https://www.radissonhotels.com",
+      name: "Annai Resorts & Spa",
+      stars: "Luxury Resort",
+      distance: "Prime Coastal Location",
+      address: "Kovalam Road, Kanyakumari, Tamil Nadu",
+      link: "https://www.annairesorts.com",
     },
   ];
 
   return (
-    <section id="travel" className="py-16 sm:py-24 bg-[#faf7f2] border-t border-[#c5a059]/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="travel" className="py-16 sm:py-24 bg-[#0b0907] border-t border-[#d4af37]/20 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
-          <span className="text-[#c5a059] font-script text-2xl xs:text-3xl sm:text-4xl block mb-1 sm:mb-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-2xl mx-auto mb-8 sm:mb-12"
+        >
+          <span className="text-[#d4af37] font-script text-xl sm:text-2xl block mb-1">
             Guest Guide
           </span>
-          <h2 className="font-serif-luxury text-3xl sm:text-5xl text-[#231f20] font-normal tracking-wide">
+          <h2 className="font-serif-luxury text-2xl xs:text-3xl sm:text-4xl text-[#fcfbf7] font-normal tracking-wide">
             Travel & Accommodations
           </h2>
-          <div className="flex items-center justify-center gap-3 my-3 sm:my-4">
-            <div className="w-10 sm:w-12 h-[1px] bg-[#c5a059]" />
-            <Heart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#c5a059] fill-[#c5a059]" />
-            <div className="w-10 sm:w-12 h-[1px] bg-[#c5a059]" />
+          <div className="flex items-center justify-center gap-3 my-3">
+            <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
+            <Heart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#d4af37] fill-[#d4af37]" />
+            <div className="w-10 sm:w-12 h-[1px] bg-[#d4af37]" />
           </div>
-          <p className="text-[#6b6661] text-xs sm:text-base leading-relaxed px-2">
-            For our cherished friends and family travelling from out of town, we have compiled helpful travel directions and stay options.
+          <p className="text-[#b8ab96] text-xs sm:text-sm leading-relaxed px-2">
+            For our cherished friends and family travelling from out of town to Kanyakumari, we have compiled helpful travel directions and stay options.
           </p>
-        </div>
+        </motion.div>
 
         {/* Travel Transit Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
-          <div className="bg-white p-4 xs:p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#c5a059]/20 shadow-sm flex items-start gap-3.5 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#faf7f2] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] shrink-0">
-              <Plane className="w-5 h-5 sm:w-6 sm:h-6" />
-            </div>
-            <div>
-              <h4 className="font-serif-luxury text-lg sm:text-xl text-[#231f20] font-semibold mb-1">
-                Chennai Airport (MAA)
-              </h4>
-              <p className="text-xs text-[#6b6661] leading-relaxed">
-                Approx. 15 km (25-35 minutes) to the reception venue. Prepaid taxis, Uber, and Ola are available 24/7.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white p-4 xs:p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#c5a059]/20 shadow-sm flex items-start gap-3.5 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#faf7f2] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] shrink-0">
-              <Train className="w-5 h-5 sm:w-6 sm:h-6" />
-            </div>
-            <div>
-              <h4 className="font-serif-luxury text-lg sm:text-xl text-[#231f20] font-semibold mb-1">
-                Central & Egmore Stations
-              </h4>
-              <p className="text-xs text-[#6b6661] leading-relaxed">
-                Approx. 10 km away. Connected via Chennai Metro directly to Guindy (ITC Grand Chola) and city venues.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white p-4 xs:p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#c5a059]/20 shadow-sm flex items-start gap-3.5 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#faf7f2] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] shrink-0">
-              <Car className="w-5 h-5 sm:w-6 sm:h-6" />
-            </div>
-            <div>
-              <h4 className="font-serif-luxury text-lg sm:text-xl text-[#231f20] font-semibold mb-1">
-                Valet & Parking
-              </h4>
-              <p className="text-xs text-[#6b6661] leading-relaxed">
-                Complimentary valet parking will be available at all wedding venues for our esteemed guests.
-              </p>
-            </div>
-          </div>
+          {[
+            {
+              icon: Plane,
+              title: "Trivandrum Airport (TRV)",
+              desc: "Approx. 85-90 km to Kanyakumari. 24/7 prepaid airport cabs and express buses are conveniently available.",
+            },
+            {
+              icon: Train,
+              title: "Kanyakumari & Nagercoil Stations",
+              desc: "Kanyakumari (CAPE) & Nagercoil Junction (NCJ) have direct express trains from Chennai, Bangalore, and across India.",
+            },
+            {
+              icon: Car,
+              title: "Road & Venue Parking",
+              desc: "Ample parking space is provided at both ASKR Thirumana Mandapam and CSI Church Punnaiyadi Community Hall.",
+            },
+          ].map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="glass-panel-midnight p-4 xs:p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-[#d4af37]/20 shadow-md flex items-start gap-3.5 sm:gap-4 group hover:border-[#d4af37]/50 transition-colors"
+              >
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#181410] border border-[#d4af37]/35 flex items-center justify-center text-[#d4af37] shrink-0 group-hover:scale-105 transition-transform">
+                  <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <div>
+                  <h4 className="font-serif-luxury text-base sm:text-lg text-[#fcfbf7] font-semibold mb-1">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-[#cfc5b6] leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Recommended Hotels */}
         <div>
-          <h3 className="font-serif-luxury text-xl xs:text-2xl sm:text-3xl text-[#231f20] mb-4 sm:mb-6 text-center">
+          <motion.h3 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="font-serif-luxury text-xl sm:text-2xl text-[#fcfbf7] mb-4 sm:mb-6 text-center font-normal"
+          >
             Recommended Nearby Stays
-          </h3>
+          </motion.h3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {accommodations.map((hotel, idx) => (
-              <div
+              <motion.div
                 key={idx}
-                className="bg-white rounded-2xl p-4 xs:p-5 sm:p-6 border border-[#c5a059]/20 shadow-sm flex flex-col justify-between"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="glass-panel-midnight rounded-2xl p-4 xs:p-5 sm:p-6 border border-[#d4af37]/20 shadow-md flex flex-col justify-between hover:border-[#d4af37]/50 transition-colors"
               >
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-1.5 mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#a27e36] bg-[#faf7f2] px-2.5 py-0.5 rounded-full border border-[#c5a059]/20">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#f6e29f] bg-[#181410] px-2.5 py-0.5 rounded-full border border-[#d4af37]/30">
                       {hotel.stars}
                     </span>
-                    <span className="text-[11px] sm:text-xs text-stone-500">{hotel.distance}</span>
+                    <span className="text-[11px] sm:text-xs text-[#b8ab96]">{hotel.distance}</span>
                   </div>
-                  <h4 className="font-serif-luxury text-lg sm:text-xl text-[#231f20] font-semibold mb-1.5 sm:mb-2">
+                  <h4 className="font-serif-luxury text-lg sm:text-xl text-[#fcfbf7] font-semibold mb-1.5 sm:mb-2">
                     {hotel.name}
                   </h4>
-                  <p className="text-xs text-[#6b6661] mb-5 sm:mb-6 flex items-start gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#c5a059] shrink-0 mt-0.5" />
+                  <p className="text-xs text-[#cfc5b6] mb-5 sm:mb-6 flex items-start gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#d4af37] shrink-0 mt-0.5" />
                     <span>{hotel.address}</span>
                   </p>
                 </div>
@@ -126,12 +145,12 @@ export default function TravelAndAccommodations() {
                   href={hotel.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl border border-[#c5a059]/40 text-xs font-semibold text-[#a27e36] hover:bg-[#faf7f2] transition-colors min-h-[42px] touch-manipulation"
+                  className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl border border-[#d4af37]/45 text-xs font-semibold text-[#f6e29f] hover:bg-[#d4af37]/15 transition-colors min-h-[42px] touch-manipulation"
                 >
                   <span>Book / View Hotel</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ExternalLink className="w-3.5 h-3.5 text-[#d4af37]" />
                 </a>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

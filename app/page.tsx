@@ -4,7 +4,6 @@ import Couple from "@/components/Couple";
 import Story from "@/components/Story";
 import EventsSchedule from "@/components/EventsSchedule";
 import Gallery from "@/components/Gallery";
-import Entourage from "@/components/Entourage";
 import RsvpAndWishes from "@/components/RsvpAndWishes";
 import WishesWall from "@/components/WishesWall";
 import TravelAndAccommodations from "@/components/TravelAndAccommodations";
@@ -13,12 +12,12 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#faf7f2] text-[#231f20] flex flex-col font-sans selection:bg-[#c5a059]/20 selection:text-[#a27e36]">
+    <div className="min-h-screen min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-[#0b0907] text-[#fcfbf7] flex flex-col font-sans selection:bg-[#d4af37]/30 selection:text-[#f6e29f]">
       {/* Navigation */}
       <Navbar />
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full overflow-x-hidden">
         {/* Hero with Countdown */}
         <Hero />
 
@@ -33,9 +32,6 @@ export default function Home() {
 
         {/* Photo Gallery & Lightbox */}
         <Gallery />
-
-        {/* Bridal Party & Entourage */}
-        <Entourage />
 
         {/* RSVP Form with SQL Backend Submission */}
         <RsvpAndWishes />

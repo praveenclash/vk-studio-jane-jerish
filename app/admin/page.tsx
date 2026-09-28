@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 import {
   Database,
   Users,
@@ -14,7 +15,16 @@ import {
   Heart,
   CheckCircle,
   XCircle,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Lock,
+  LogOut,
+  PlusCircle,
+  X,
+  Send,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  User
 } from "lucide-react";
 
 interface WishRecord {
@@ -29,11 +39,74 @@ interface WishRecord {
 }
 
 export default function AdminPage() {
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [authChecking, setAuthChecking] = useState<boolean>(true);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+
+  // Data state
   const [records, setRecords] = useState<WishRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [statusMsg, setStatusMsg] = useState("");
+
+  // Manual Add Modal State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [submittingWish, setSubmittingWish] = useState(false);
+  const [addError, setAddError] = useState("");
+  const [addForm, setAddForm] = useState({
+    name: "",
+    relation: "Family",
+    attendance: "attending",
+    guests_count: 1,
+    message: "",
+  });
+
+  // Check login session on mount
+  useEffect(() => {
+    const auth = sessionStorage.getItem("wedding_admin_auth");
+    if (auth === "true") {
+      setIsAuthenticated(true);
+      fetchRecords();
+    }
+    setAuthChecking(false);
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError("");
+
+    const validUsernames = ["admin", "jane", "jerish", "vkstudio"];
+    const validPasswords = ["janejerish2026", "admin123", "password123", "wedding2026"];
+
+    const userClean = username.trim().toLowerCase();
+    const passClean = password.trim();
+
+    if (validUsernames.includes(userClean) && validPasswords.includes(passClean)) {
+      sessionStorage.setItem("wedding_admin_auth", "true");
+      setIsAuthenticated(true);
+      fetchRecords();
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ["#d4af37", "#f6e29f", "#ffffff"],
+      });
+    } else {
+      setLoginError("Invalid username or password. Please check your credentials.");
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("wedding_admin_auth");
+    setIsAuthenticated(false);
+    setUsername("");
+    setPassword("");
+  };
 
   const fetchRecords = async () => {
     setLoading(true);
@@ -49,10 +122,6 @@ export default function AdminPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchRecords();
-  }, []);
 
   const handleDelete = async (id: number, name: string) => {
     if (!confirm(`Are you sure you want to delete the entry from "${name}"?`)) {
@@ -72,6 +141,62 @@ export default function AdminPage() {
     } catch (e) {
       console.error(e);
       alert("Error connecting to server.");
+    }
+  };
+
+  const handleManualAddSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addForm.name.trim() || !addForm.message.trim()) {
+      setAddError("Please fill in both the guest name and blessing message.");
+      return;
+    }
+
+    setSubmittingWish(true);
+    setAddError("");
+
+    try {
+      const res = await fetch("/api/wishes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(addForm),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        // Refresh records
+        await fetchRecords();
+
+        // Broadcast to live website
+        window.dispatchEvent(new CustomEvent("wedding_new_wish", { detail: data.data }));
+
+        // Confetti celebration
+        confetti({
+          particleCount: 60,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#d4af37", "#f6e29f", "#ffffff"],
+        });
+
+        // Close modal and reset form
+        setShowAddModal(false);
+        setAddForm({
+          name: "",
+          relation: "Family",
+          attendance: "attending",
+          guests_count: 1,
+          message: "",
+        });
+
+        setStatusMsg(`Successfully added wish from "${data.data.name}" to the SQL database!`);
+        setTimeout(() => setStatusMsg(""), 5000);
+      } else {
+        setAddError(data.error || "Failed to save wish to database.");
+      }
+    } catch (err) {
+      console.error(err);
+      setAddError("Network error while connecting to SQL database.");
+    } finally {
+      setSubmittingWish(false);
     }
   };
 
@@ -121,131 +246,297 @@ export default function AdminPage() {
   const totalDeclined = records.filter((r) => r.attendance === "regretfully_decline").length;
   const totalLikes = records.reduce((acc, curr) => acc + (curr.likes || 0), 0);
 
+  // If initial auth check is in progress
+  if (authChecking) {
+    return (
+      <div className="min-h-screen bg-[#0b0907] flex items-center justify-center">
+        <div className="w-8 h-8 border-3 border-[#d4af37] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // LOGIN SCREEN
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0b0907] text-[#fcfbf7] flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Ambient background glows */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#d4af37]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-72 h-72 bg-[#d4af37]/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-md relative z-10">
+          {/* Card */}
+          <div className="glass-panel-midnight-elevated rounded-3xl p-6 xs:p-8 sm:p-10 border border-[#d4af37]/35 shadow-2xl text-center">
+            {/* Logo */}
+            <div className="flex justify-center mb-4">
+              <img
+                src="/images/logo-gold.png"
+                alt="JJ Monogram Logo"
+                className="h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(212,175,55,0.4)]"
+              />
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181410] border border-[#d4af37]/30 text-[#f6e29f] text-[10px] sm:text-xs font-cinzel font-semibold uppercase tracking-widest mb-3">
+              <Lock className="w-3 h-3 text-[#d4af37]" />
+              <span>Admin Security Portal</span>
+            </div>
+
+            <h1 className="font-serif-luxury text-2xl xs:text-3xl text-white font-normal mb-1 tracking-wide">
+              Wedding Manager
+            </h1>
+            <p className="text-xs text-[#b8ab96] mb-6">
+              Jane & Jerish • SQL Database & RSVP Control Panel
+            </p>
+
+            {/* Error banner */}
+            {loginError && (
+              <div className="mb-5 p-3 rounded-xl bg-red-950/70 border border-red-500/50 text-red-200 text-xs text-left flex items-start gap-2 animate-fadeIn">
+                <XCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <span>{loginError}</span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleLogin} className="space-y-4 text-left">
+              <div>
+                <label className="block text-[11px] font-cinzel font-semibold uppercase tracking-wider text-[#ded6ca] mb-1.5">
+                  Admin Username
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                    <User className="w-4 h-4 text-[#d4af37]" />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter username (e.g. admin)"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/25 text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-cinzel font-semibold uppercase tracking-wider text-[#ded6ca] mb-1.5">
+                  Secret Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                    <Lock className="w-4 h-4 text-[#d4af37]" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 pr-10 py-2.5 sm:py-3 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/25 text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-200"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full py-3 sm:py-3.5 rounded-full gold-gradient-bg text-black font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-[44px] flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  Sign In to Dashboard
+                </button>
+              </div>
+
+              {/* Quick default credential helper */}
+              <div className="pt-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUsername("admin");
+                    setPassword("janejerish2026");
+                  }}
+                  className="text-[11px] text-[#d4af37] underline hover:text-[#f6e29f] transition-colors"
+                >
+                  Fill default credentials (admin / janejerish2026)
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-6 pt-4 border-t border-[#d4af37]/15">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-xs text-[#b8ab96] hover:text-white transition-colors"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Return to Wedding Website</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // AUTHENTICATED ADMIN DASHBOARD
   return (
-    <div className="min-h-screen bg-[#faf7f2] text-[#231f20] p-3 xs:p-4 sm:p-8">
+    <div className="min-h-screen bg-[#0b0907] text-[#fcfbf7] p-3 xs:p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-[#c5a059]/20">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-[#d4af37]/25">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="p-2 sm:p-2.5 rounded-xl bg-white border border-[#c5a059]/30 text-stone-700 hover:text-[#c5a059] shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0"
+              className="p-2 sm:p-2.5 rounded-xl bg-[#181410] border border-[#d4af37]/30 text-stone-300 hover:text-[#d4af37] shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0"
               title="Back to Wedding Website"
             >
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <div>
-              <div className="flex items-center gap-2">
-                <Database className="w-4 sm:w-5 h-4 sm:h-5 text-[#c5a059] shrink-0" />
-                <h1 className="font-serif-luxury text-xl xs:text-2xl sm:text-3xl font-bold text-[#231f20] leading-tight">
-                  Wedding SQL Database & RSVP Manager
-                </h1>
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/images/logo-gold.png"
+                alt="JJ Monogram"
+                className="h-9 w-auto object-contain hidden xs:block"
+              />
+              <div>
+                <div className="flex items-center gap-2">
+                  <Database className="w-4 sm:w-5 h-4 sm:h-5 text-[#d4af37] shrink-0" />
+                  <h1 className="font-serif-luxury text-xl xs:text-2xl sm:text-3xl font-normal text-white leading-tight">
+                    Wedding SQL Database & RSVP Manager
+                  </h1>
+                </div>
+                <p className="text-[11px] sm:text-xs text-[#b8ab96] mt-0.5 break-all">
+                  Database: <code className="bg-[#181410] px-1.5 py-0.5 rounded font-mono text-[10px] text-[#f6e29f] border border-[#d4af37]/20">wedding.db</code> • Table: <code className="bg-[#181410] px-1.5 py-0.5 rounded font-mono text-[10px] text-[#f6e29f] border border-[#d4af37]/20">wishes</code>
+                </p>
               </div>
-              <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5 break-all">
-                Database: <code className="bg-stone-200/70 px-1 py-0.5 rounded font-mono text-[10px]">wedding.db</code> • Table: <code className="bg-stone-200/70 px-1 py-0.5 rounded font-mono text-[10px]">wishes</code>
-              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          {/* Action buttons */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            {/* Add Manual Wish button */}
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl gold-gradient-bg text-black text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all min-h-[40px] touch-manipulation cursor-pointer"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Add Wish / RSVP</span>
+            </button>
+
+            {/* Export CSV */}
             <button
               onClick={exportCSV}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all min-h-[40px] touch-manipulation"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all min-h-[40px] touch-manipulation cursor-pointer"
             >
               <FileSpreadsheet className="w-4 h-4" />
-              Export to Excel (CSV)
+              <span className="hidden xs:inline">Export CSV</span>
             </button>
+
+            {/* Refresh */}
             <button
               onClick={fetchRecords}
-              className="p-2.5 rounded-xl bg-white border border-[#c5a059]/30 text-stone-700 hover:text-[#c5a059] shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0 touch-manipulation"
+              className="p-2.5 rounded-xl bg-[#181410] border border-[#d4af37]/35 text-stone-300 hover:text-[#d4af37] shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0 touch-manipulation cursor-pointer"
               title="Refresh Data"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#d4af37]" : ""}`} />
+            </button>
+
+            {/* Logout button */}
+            <button
+              onClick={handleLogout}
+              className="p-2.5 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-900/60 shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0 touch-manipulation cursor-pointer"
+              title="Sign Out"
+            >
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
-          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-[#c5a059]/20 shadow-sm">
+          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-[#d4af37]/25 shadow-sm">
             <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold">Total Wishes</span>
-              <MessageSquareHeart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#c5a059]" />
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-[#ded6ca]">Total Wishes</span>
+              <MessageSquareHeart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-[#d4af37]" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-[#231f20]">
+            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-white">
               {records.length}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 sm:mt-1">In database</div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">In SQL database</div>
           </div>
 
-          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-[#c5a059]/20 shadow-sm">
+          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-emerald-500/30 shadow-sm">
             <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold">Attending</span>
-              <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-emerald-600" />
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-emerald-400">Attending</span>
+              <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-emerald-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-emerald-700">
+            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-emerald-400">
               {totalConfirmedGuests}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 sm:mt-1">Guests headcount</div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Confirmed guests headcount</div>
           </div>
 
-          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-[#c5a059]/20 shadow-sm">
+          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-stone-700 shadow-sm">
             <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold">Declined</span>
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-stone-400">Declined</span>
               <XCircle className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-stone-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-stone-600">
+            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-stone-400">
               {totalDeclined}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 sm:mt-1">Sent love</div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Sent heartfelt regrets</div>
           </div>
 
-          <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-[#c5a059]/20 shadow-sm">
+          <div className="glass-panel-midnight p-3.5 sm:p-5 rounded-2xl border border-rose-500/30 shadow-sm">
             <div className="flex items-center justify-between text-stone-400 mb-1.5 sm:mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold">Reactions</span>
-              <Heart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-rose-500 fill-rose-500" />
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-rose-300">Reactions</span>
+              <Heart className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-rose-400 fill-rose-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-rose-600">
+            <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-rose-400">
               {totalLikes}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 sm:mt-1">Given by visitors</div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Heart likes by visitors</div>
           </div>
         </div>
 
         {/* Status Toast */}
         {statusMsg && (
-          <div className="mb-6 p-3.5 sm:p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-amber-600 shrink-0" />
+          <div className="mb-6 p-3.5 sm:p-4 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs font-medium flex items-center gap-2 animate-fadeIn">
+            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{statusMsg}</span>
           </div>
         )}
 
         {/* Search & Filter Toolbar */}
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#c5a059]/20 shadow-sm mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-stretch sm:items-center">
+        <div className="glass-panel-midnight p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/25 shadow-sm mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-stretch sm:items-center">
           <div className="relative w-full sm:w-80">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4 text-[#d4af37]" />
             </div>
             <input
               type="text"
               placeholder="Search name, relation, message..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059]"
+              className="w-full pl-9 pr-4 py-2 rounded-xl border border-[#d4af37]/30 text-xs focus:outline-none focus:border-[#d4af37] bg-[#14100c] text-white placeholder:text-stone-500"
             />
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-between sm:justify-start">
-            <span className="text-xs font-semibold text-stone-500 shrink-0">Filter:</span>
+            <span className="text-xs font-semibold text-[#ded6ca] shrink-0">Filter:</span>
             <div className="flex items-center gap-1.5">
               {["all", "attending", "declined"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setFilter(tab)}
-                  className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all touch-manipulation min-h-[32px] ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all touch-manipulation min-h-[32px] cursor-pointer ${
                     filter === tab
-                      ? "bg-[#c5a059] text-white shadow-sm"
-                      : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                      ? "gold-gradient-bg text-black font-semibold shadow-sm"
+                      : "bg-[#181410] text-[#cfc5b6] hover:text-white border border-[#d4af37]/20"
                   }`}
                 >
                   {tab}
@@ -256,52 +547,55 @@ export default function AdminPage() {
         </div>
 
         {/* Data Table */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#c5a059]/20 shadow-sm overflow-hidden">
-          <div className="sm:hidden px-4 py-2 bg-stone-50/80 border-b border-stone-100 text-[10px] text-stone-500 flex items-center justify-between">
-            <span>Scroll horizontally to view details</span>
+        <div className="glass-panel-midnight rounded-2xl sm:rounded-3xl border border-[#d4af37]/25 shadow-sm overflow-hidden">
+          <div className="sm:hidden px-4 py-2 bg-stone-900 border-b border-[#d4af37]/15 text-[10px] text-[#b8ab96] flex items-center justify-between">
+            <span>Scroll horizontally to view table columns</span>
             <span>👉</span>
           </div>
           <div className="overflow-x-auto no-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
             <table className="w-full text-left text-xs min-w-[700px]">
-              <thead className="bg-[#faf7f2] border-b border-[#c5a059]/20 text-stone-600 font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
+              <thead className="bg-[#14100c] border-b border-[#d4af37]/25 text-[#ded6ca] font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
                 <tr>
-                  <th className="py-3.5 px-4">#ID</th>
-                  <th className="py-3.5 px-4">Guest Name</th>
-                  <th className="py-3.5 px-4">Relation</th>
-                  <th className="py-3.5 px-4">RSVP Status</th>
-                  <th className="py-3.5 px-4">Guests</th>
-                  <th className="py-3.5 px-4">Blessing Message</th>
-                  <th className="py-3.5 px-4">Date & Time</th>
-                  <th className="py-3.5 px-4">Likes</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
+                  <th className="py-3.5 px-4 font-cinzel">#ID</th>
+                  <th className="py-3.5 px-4 font-cinzel">Guest Name</th>
+                  <th className="py-3.5 px-4 font-cinzel">Relation</th>
+                  <th className="py-3.5 px-4 font-cinzel">RSVP Status</th>
+                  <th className="py-3.5 px-4 font-cinzel">Guests</th>
+                  <th className="py-3.5 px-4 font-cinzel">Blessing Message</th>
+                  <th className="py-3.5 px-4 font-cinzel">Date & Time</th>
+                  <th className="py-3.5 px-4 font-cinzel">Likes</th>
+                  <th className="py-3.5 px-4 text-right font-cinzel">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-[#d4af37]/15">
                 {loading ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-stone-400">
-                      Loading data from SQL database...
+                    <td colSpan={9} className="py-12 text-center text-[#b8ab96]">
+                      <div className="inline-flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-[#d4af37] border-t-transparent rounded-full animate-spin" />
+                        <span>Loading data from SQL database...</span>
+                      </div>
                     </td>
                   </tr>
                 ) : filteredRecords.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-12 text-center text-stone-400">
-                      No records found in database.
+                    <td colSpan={9} className="py-12 text-center text-[#b8ab96]">
+                      No records found in database. Click &ldquo;Add Wish / RSVP&rdquo; above to create one!
                     </td>
                   </tr>
                 ) : (
                   filteredRecords.map((r) => {
                     const isAttending = r.attendance === "attending";
                     return (
-                      <tr key={r.id} className="hover:bg-[#faf7f2]/50 transition-colors">
-                        <td className="py-3.5 px-4 font-mono font-medium text-stone-500">
+                      <tr key={r.id} className="hover:bg-stone-900/60 transition-colors">
+                        <td className="py-3.5 px-4 font-mono font-medium text-[#d4af37]">
                           #{r.id}
                         </td>
-                        <td className="py-3.5 px-4 font-semibold text-[#231f20]">
+                        <td className="py-3.5 px-4 font-semibold text-white">
                           {r.name}
                         </td>
-                        <td className="py-3.5 px-4 text-stone-600">
-                          <span className="bg-stone-100 px-2 py-0.5 rounded text-[11px]">
+                        <td className="py-3.5 px-4 text-stone-300">
+                          <span className="bg-[#1a140f] px-2 py-0.5 rounded text-[11px] border border-[#d4af37]/20 text-[#f6e29f]">
                             {r.relation}
                           </span>
                         </td>
@@ -309,35 +603,35 @@ export default function AdminPage() {
                           <span
                             className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${
                               isAttending
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                : "bg-stone-100 text-stone-600 border border-stone-200"
+                                ? "bg-emerald-950/70 text-emerald-300 border border-emerald-500/40"
+                                : "bg-stone-900 text-stone-400 border border-stone-700"
                             }`}
                           >
                             {isAttending ? (
                               <>
-                                <CheckCircle className="w-3 h-3" /> Attending
+                                <CheckCircle className="w-3 h-3 text-emerald-400" /> Attending
                               </>
                             ) : (
                               <>
-                                <XCircle className="w-3 h-3" /> Declined
+                                <XCircle className="w-3 h-3 text-stone-400" /> Declined
                               </>
                             )}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4 font-semibold text-stone-700">
+                        <td className="py-3.5 px-4 font-semibold text-stone-200">
                           {isAttending ? r.guests_count || 1 : "-"}
                         </td>
-                        <td className="py-3.5 px-4 max-w-xs text-stone-700 italic">
+                        <td className="py-3.5 px-4 max-w-xs text-[#cfc5b6] italic">
                           <p className="line-clamp-2" title={r.message}>
                             &ldquo;{r.message}&rdquo;
                           </p>
                         </td>
-                        <td className="py-3.5 px-4 text-stone-500 whitespace-nowrap">
+                        <td className="py-3.5 px-4 text-[#8f8272] whitespace-nowrap text-[11px]">
                           {r.created_at}
                         </td>
                         <td className="py-3.5 px-4">
-                          <span className="inline-flex items-center gap-1 text-rose-600 font-semibold">
-                            <Heart className="w-3 h-3 fill-rose-500 text-rose-500" />
+                          <span className="inline-flex items-center gap-1 text-rose-400 font-semibold">
+                            <Heart className="w-3.5 h-3.5 fill-rose-400 text-rose-400" />
                             {r.likes || 0}
                           </span>
                         </td>
@@ -345,7 +639,7 @@ export default function AdminPage() {
                           <button
                             type="button"
                             onClick={() => handleDelete(r.id, r.name)}
-                            className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                            className="p-1.5 rounded-lg text-stone-400 hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
                             title="Delete entry"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -361,12 +655,167 @@ export default function AdminPage() {
         </div>
 
         {/* Footer info */}
-        <div className="mt-8 text-center text-xs text-stone-400">
+        <div className="mt-8 text-center text-xs text-[#8f8272]">
           <p>
-            Connected to SQLite Database: <span className="font-mono text-stone-600">wedding.db</span> in project root.
+            Connected to SQLite Database: <span className="font-mono text-[#d4af37]">wedding.db</span> in project root.
           </p>
         </div>
       </div>
+
+      {/* MANUAL ADD WISH MODAL */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel-midnight-elevated rounded-3xl border border-[#d4af37]/40 p-5 xs:p-6 sm:p-8 shadow-2xl relative my-8">
+            {/* Close button */}
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="absolute top-4 right-4 text-stone-400 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Close Modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header */}
+            <div className="text-center mb-5">
+              <span className="text-[#d4af37] font-script text-xl block mb-0.5">Admin Action</span>
+              <h2 className="font-serif-luxury text-xl sm:text-2xl text-white font-normal">
+                Add Wish / RSVP Manually
+              </h2>
+              <p className="text-xs text-[#b8ab96] mt-1">
+                Save a guest&apos;s blessing or RSVP directly into the SQLite database.
+              </p>
+            </div>
+
+            {/* Error banner */}
+            {addError && (
+              <div className="mb-4 p-3 rounded-xl bg-red-950/70 border border-red-500/50 text-red-200 text-xs flex items-center gap-2">
+                <XCircle className="w-4 h-4 text-red-400 shrink-0" />
+                <span>{addError}</span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleManualAddSubmit} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
+                  Guest Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Ramesh & Family"
+                  value={addForm.name}
+                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
+                    Relation / Guest Of
+                  </label>
+                  <select
+                    value={addForm.relation}
+                    onChange={(e) => setAddForm({ ...addForm, relation: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white"
+                  >
+                    <option value="Family" className="bg-[#14100c]">Family & Relative</option>
+                    <option value="Friend" className="bg-[#14100c]">Friend of Bride / Groom</option>
+                    <option value="Colleague" className="bg-[#14100c]">Colleague / Work</option>
+                    <option value="Well-wisher" className="bg-[#14100c]">Well-Wisher & Neighbor</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
+                    Number of Guests
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={addForm.guests_count}
+                    onChange={(e) => setAddForm({ ...addForm, guests_count: parseInt(e.target.value) || 1 })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
+                  Attendance Status
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAddForm({ ...addForm, attendance: "attending" })}
+                    className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+                      addForm.attendance === "attending"
+                        ? "gold-gradient-bg text-black border-[#d4af37]"
+                        : "bg-[#14100c] text-[#cfc5b6] border-[#d4af37]/30"
+                    }`}
+                  >
+                    🎉 Attending
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAddForm({ ...addForm, attendance: "regretfully_decline" })}
+                    className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all ${
+                      addForm.attendance === "regretfully_decline"
+                        ? "bg-stone-800 text-white border-stone-600"
+                        : "bg-[#14100c] text-[#cfc5b6] border-stone-700"
+                    }`}
+                  >
+                    💌 Can&apos;t Make It
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-[#ded6ca] mb-1">
+                  Wedding Blessing & Message *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  placeholder="Enter their wedding wishes for Jane & Jerish..."
+                  value={addForm.message}
+                  onChange={(e) => setAddForm({ ...addForm, message: e.target.value })}
+                  className="w-full p-3 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2.5 rounded-xl border border-stone-700 text-stone-300 hover:bg-white/5 text-xs font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingWish}
+                  className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl gold-gradient-bg text-black text-xs font-bold uppercase tracking-wider shadow hover:brightness-110 disabled:opacity-50 min-h-[40px] cursor-pointer"
+                >
+                  {submittingWish ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      Save to Database
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
