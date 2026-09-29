@@ -15,7 +15,7 @@ export async function POST(
       );
     }
 
-    const updated = toggleLikeWish(wishId);
+    const updated = await toggleLikeWish(wishId);
     if (!updated) {
       return NextResponse.json(
         { success: false, error: "Wish not found" },

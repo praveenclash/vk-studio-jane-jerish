@@ -444,7 +444,7 @@ export default function AdminPage() {
             <div className="text-2xl sm:text-3xl font-bold font-serif-luxury text-white">
               {records.length}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Stored in SQLite database</div>
+            <div className="text-[10px] sm:text-[11px] text-[#b8ab96] mt-0.5 sm:mt-1">Stored in MySQL database</div>
           </div>
 
           <div className="glass-panel-midnight p-4 sm:p-5 rounded-2xl border border-rose-500/30 shadow-sm">
@@ -574,7 +574,7 @@ export default function AdminPage() {
         {/* Footer info */}
         <div className="mt-8 text-center text-xs text-[#8f8272]">
           <p>
-            Connected to SQLite Database: <span className="font-mono text-[#d4af37]">wedding.db</span> in project root.
+            Connected to MySQL Database: <span className="font-mono text-[#d4af37]">railway</span> on Railway Cloud.
           </p>
         </div>
       </div>
@@ -599,7 +599,7 @@ export default function AdminPage() {
                 Add Wish Manually
               </h2>
               <p className="text-xs text-[#b8ab96] mt-1">
-                Save a guest&apos;s blessing directly into the SQLite database.
+                Save a guest&apos;s blessing directly into the MySQL database.
               </p>
             </div>
 

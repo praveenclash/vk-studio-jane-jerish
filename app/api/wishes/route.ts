@@ -5,10 +5,10 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const wishes = getAllWishes();
+    const wishes = await getAllWishes();
     return NextResponse.json({ success: true, data: wishes });
   } catch (error) {
-    console.error("Error fetching wishes from SQL database:", error);
+    console.error("Error fetching wishes from MySQL database:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch wishes" },
       { status: 500 }
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const newWish = createWish({
+    const newWish = await createWish({
       name: name.slice(0, 100),
       message: message.slice(0, 1000),
     });

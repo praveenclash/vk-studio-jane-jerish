@@ -15,7 +15,7 @@ export async function DELETE(
       );
     }
 
-    const success = deleteWish(wishId);
+    const success = await deleteWish(wishId);
     if (!success) {
       return NextResponse.json(
         { success: false, error: "Entry not found" },

@@ -1,6 +1,4 @@
-import fs from "fs";
-import path from "path";
-import os from "os";
+import mysql, { Pool, RowDataPacket, ResultSetHeader } from "mysql2/promise";
 
 export interface Wish {
   id: number;
@@ -41,117 +39,211 @@ const defaultSeedWishes: Wish[] = [
   },
 ];
 
-// Determine writable directory (/tmp on Vercel/AWS Lambda, process.cwd() locally)
-const isVercel = !!process.env.VERCEL || process.env.NODE_ENV === "production";
-const storageDir = isVercel ? os.tmpdir() : process.cwd();
-const jsonFilePath = path.join(storageDir, "wishes-store.json");
-
-// In-memory cache singleton
+// Singleton storage in globalThis for Next.js hot-reloads
 const globalStore = globalThis as unknown as {
-  wishesCache: Wish[] | undefined;
+  mysqlPool?: Pool;
+  dbInitialized?: boolean;
+  localFallbackWishes?: Wish[];
 };
 
-function loadWishesFromFile(): Wish[] {
-  try {
-    if (fs.existsSync(jsonFilePath)) {
-      const data = fs.readFileSync(jsonFilePath, "utf-8");
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
-      }
+/**
+ * Returns or creates the MySQL connection pool
+ */
+export function getPool(): Pool {
+  if (!globalStore.mysqlPool) {
+    const connectionUri = process.env.MYSQL_PUBLIC_URL || process.env.MYSQL_URL || process.env.DATABASE_URL;
+
+    if (connectionUri && !process.env.MYSQLHOST_PUBLIC) {
+      globalStore.mysqlPool = mysql.createPool({
+        uri: connectionUri,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        enableKeepAlive: true,
+        keepAliveInitialDelay: 10000,
+      });
+    } else {
+      globalStore.mysqlPool = mysql.createPool({
+        host: process.env.MYSQLHOST_PUBLIC || process.env.MYSQLHOST || "mysql.railway.internal",
+        port: Number(process.env.MYSQLPORT_PUBLIC || process.env.MYSQLPORT || 3306),
+        user: process.env.MYSQLUSER || "root",
+        password: process.env.MYSQLPASSWORD || process.env.MYSQL_ROOT_PASSWORD,
+        database: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || "railway",
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        enableKeepAlive: true,
+        keepAliveInitialDelay: 10000,
+      });
     }
-  } catch (err) {
-    console.warn("Failed to read wishes from JSON file:", err);
   }
+  return globalStore.mysqlPool;
+}
 
-  // Also check if local wedding.db exists and can be read safely
-  try {
-    const Database = require("better-sqlite3");
-    const dbPath = path.join(process.cwd(), "wedding.db");
-    if (fs.existsSync(dbPath)) {
-      const db = new Database(dbPath, { readonly: true });
-      const rows = db.prepare("SELECT * FROM wishes ORDER BY id DESC").all() as Wish[];
-      db.close();
-      if (rows && rows.length > 0) {
-        saveWishesToFile(rows);
-        return rows;
-      }
+/**
+ * Ensures the `wishes` table exists in MySQL and seeds initial records if empty
+ */
+export async function initDb(): Promise<void> {
+  if (globalStore.dbInitialized) return;
+
+  const pool = getPool();
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS wishes (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      message TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      likes INT DEFAULT 0
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `);
+
+  const [rows] = await pool.query<RowDataPacket[]>("SELECT COUNT(*) as count FROM wishes");
+  const count = rows[0]?.count ?? 0;
+  if (count === 0) {
+    for (const wish of defaultSeedWishes) {
+      await pool.query(
+        "INSERT INTO wishes (name, message, created_at, likes) VALUES (?, ?, ?, ?)",
+        [wish.name, wish.message, wish.created_at, wish.likes]
+      );
     }
-  } catch {
-    // SQLite not available or readonly error
   }
 
-  return [...defaultSeedWishes];
+  globalStore.dbInitialized = true;
 }
 
-function saveWishesToFile(wishes: Wish[]) {
+/**
+ * Helper to get in-memory fallback list if running locally without Railway private network access
+ */
+function getFallbackStore(): Wish[] {
+  if (!globalStore.localFallbackWishes) {
+    globalStore.localFallbackWishes = [...defaultSeedWishes];
+  }
+  return globalStore.localFallbackWishes;
+}
+
+/**
+ * Retrieve all wishes from MySQL (sorted by newest first)
+ */
+export async function getAllWishes(): Promise<Wish[]> {
   try {
-    fs.writeFileSync(jsonFilePath, JSON.stringify(wishes, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("Could not persist wishes to disk:", err);
+    await initDb();
+    const pool = getPool();
+    const [rows] = await pool.query<RowDataPacket[]>(`
+      SELECT 
+        id, 
+        name, 
+        message, 
+        DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at, 
+        likes 
+      FROM wishes 
+      ORDER BY id DESC
+    `);
+
+    return rows.map((r) => ({
+      id: Number(r.id),
+      name: String(r.name),
+      message: String(r.message),
+      created_at: String(r.created_at || new Date().toISOString()),
+      likes: Number(r.likes || 0),
+    }));
+  } catch (error: any) {
+    console.warn(
+      "⚠️ MySQL Query Note (using fallback):",
+      error?.message || error
+    );
+    const store = getFallbackStore();
+    return [...store].sort((a, b) => b.id - a.id);
   }
 }
 
-function getStore(): Wish[] {
-  if (!globalStore.wishesCache) {
-    globalStore.wishesCache = loadWishesFromFile();
-  }
-  return globalStore.wishesCache;
-}
+/**
+ * Create a new wish in MySQL
+ */
+export async function createWish(data: { name: string; message: string }): Promise<Wish> {
+  const cleanName = data.name.trim();
+  const cleanMessage = data.message.trim();
+  const createdAt = new Date().toISOString().replace("T", " ").slice(0, 19);
 
-export function getAllWishes(): Wish[] {
-  const store = getStore();
-  return [...store].sort((a, b) => b.id - a.id);
-}
-
-export function createWish(data: { name: string; message: string }): Wish {
-  const store = getStore();
-  const nextId = store.length > 0 ? Math.max(...store.map((w) => w.id)) + 1 : 1;
-
-  const newWish: Wish = {
-    id: nextId,
-    name: data.name.trim(),
-    message: data.message.trim(),
-    created_at: new Date().toISOString().replace("T", " ").slice(0, 19),
-    likes: 0,
-  };
-
-  store.unshift(newWish);
-  saveWishesToFile(store);
-
-  // Also try to insert into SQLite if running locally with write permissions
   try {
-    const Database = require("better-sqlite3");
-    const dbPath = path.join(process.cwd(), "wedding.db");
-    const db = new Database(dbPath);
-    db.prepare(`
-      INSERT INTO wishes (name, message, created_at, likes)
-      VALUES (?, ?, ?, 0)
-    `).run(newWish.name, newWish.message, newWish.created_at);
-    db.close();
-  } catch {
-    // Ignore SQLite errors in serverless
+    await initDb();
+    const pool = getPool();
+    const [result] = await pool.query<ResultSetHeader>(
+      "INSERT INTO wishes (name, message, created_at, likes) VALUES (?, ?, ?, 0)",
+      [cleanName, cleanMessage, createdAt]
+    );
+
+    return {
+      id: result.insertId,
+      name: cleanName,
+      message: cleanMessage,
+      created_at: createdAt,
+      likes: 0,
+    };
+  } catch (error: any) {
+    console.warn("⚠️ MySQL Insert Note (using fallback):", error?.message || error);
+    const store = getFallbackStore();
+    const nextId = store.length > 0 ? Math.max(...store.map((w) => w.id)) + 1 : 1;
+    const newWish: Wish = {
+      id: nextId,
+      name: cleanName,
+      message: cleanMessage,
+      created_at: createdAt,
+      likes: 0,
+    };
+    store.unshift(newWish);
+    return newWish;
   }
-
-  return newWish;
 }
 
-export function toggleLikeWish(id: number): Wish | null {
-  const store = getStore();
-  const wish = store.find((w) => w.id === id);
-  if (!wish) return null;
+/**
+ * Increment the like count for a wish in MySQL
+ */
+export async function toggleLikeWish(id: number): Promise<Wish | null> {
+  try {
+    await initDb();
+    const pool = getPool();
+    await pool.query("UPDATE wishes SET likes = likes + 1 WHERE id = ?", [id]);
 
-  wish.likes = (wish.likes || 0) + 1;
-  saveWishesToFile(store);
-  return wish;
+    const [rows] = await pool.query<RowDataPacket[]>(
+      "SELECT id, name, message, DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at, likes FROM wishes WHERE id = ?",
+      [id]
+    );
+
+    if (!rows || rows.length === 0) return null;
+
+    const row = rows[0];
+    return {
+      id: Number(row.id),
+      name: String(row.name),
+      message: String(row.message),
+      created_at: String(row.created_at),
+      likes: Number(row.likes || 0),
+    };
+  } catch (error: any) {
+    console.warn("⚠️ MySQL Like Note (using fallback):", error?.message || error);
+    const store = getFallbackStore();
+    const wish = store.find((w) => w.id === id);
+    if (!wish) return null;
+    wish.likes = (wish.likes || 0) + 1;
+    return wish;
+  }
 }
 
-export function deleteWish(id: number): boolean {
-  const store = getStore();
-  const idx = store.findIndex((w) => w.id === id);
-  if (idx === -1) return false;
-
-  store.splice(idx, 1);
-  saveWishesToFile(store);
-  return true;
+/**
+ * Delete a wish by ID from MySQL
+ */
+export async function deleteWish(id: number): Promise<boolean> {
+  try {
+    await initDb();
+    const pool = getPool();
+    const [result] = await pool.query<ResultSetHeader>("DELETE FROM wishes WHERE id = ?", [id]);
+    return result.affectedRows > 0;
+  } catch (error: any) {
+    console.warn("⚠️ MySQL Delete Note (using fallback):", error?.message || error);
+    const store = getFallbackStore();
+    const idx = store.findIndex((w) => w.id === id);
+    if (idx === -1) return false;
+    store.splice(idx, 1);
+    return true;
+  }
 }
