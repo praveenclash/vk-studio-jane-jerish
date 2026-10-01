@@ -36,7 +36,7 @@ export default function Gallery() {
     {
       id: 5,
       caption: "Evening Glow & Endless Horizon",
-      src: "/images/MAD_1880.webp",
+      src: "/images/WhatsApp.jpeg",
       position: "center 20%",
     },
     {

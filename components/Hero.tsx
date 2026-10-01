@@ -32,8 +32,8 @@ export default function Hero() {
   });
 
   const heroImages = [
-    "/images/MAD_1926.webp",
-    "/images/MAD_1873.webp"
+    { src: "/images/Hero_Image_1.jpeg", pcPos: "sm:object-[center_20%]" },
+    { src: "/images/Hero_Image_2.jpeg", pcPos: "sm:object-[center_32%]" },
   ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -66,43 +66,44 @@ export default function Hero() {
   }, [targetDate]);
 
   return (
-    <section ref={containerRef} className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
+    <section ref={containerRef} className="relative min-h-dvh flex items-center justify-center overflow-hidden">
       {/* Background Image Slideshow with smooth crossfade and scroll parallax */}
       <motion.div
         style={{ y: backgroundY, scale: backgroundScale }}
         className="absolute inset-0 will-change-transform"
       >
-        {heroImages.map((src, idx) => (
+        {heroImages.map((img, idx) => (
           <div
-            key={src}
+            key={img.src}
             className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
               idx === currentImageIndex
                 ? "opacity-100 scale-100"
                 : "opacity-0 scale-105 pointer-events-none"
             }`}
           >
+            {/* Full-bleed Edge-to-Edge Image (No side space on any screen) */}
             <Image
-              src={src}
+              src={img.src}
               alt="Jane & Jerish Wedding"
               fill
               priority={idx === 0}
               sizes="100vw"
-              quality={80}
-              className="object-cover object-center"
+              quality={85}
+              className={`object-cover object-center ${img.pcPos}`}
             />
           </div>
         ))}
-        {/* Soft luxury dark gradients over image */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/50 to-[#0b0907] pointer-events-none" />
+        {/* Soft luxury dark gradient: clear over faces in upper half, dark at bottom for readable text */}
+        <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black/90 pointer-events-none" />
       </motion.div>
 
       {/* Decorative floral or sparkling aura */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#d4af37]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-[#d4af37]/20 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Main Hero Content with smooth scroll fade */}
+      {/* Main Hero Content with smooth scroll fade - Positioned at bottom so faces are 100% visible */}
       <motion.div
         style={{ opacity: contentOpacity, y: contentY }}
-        className="relative z-10 w-full max-w-4xl mx-auto px-3.5 sm:px-6 text-center pt-[calc(env(safe-area-inset-top,0px)+4.25rem)] sm:pt-28 pb-6 sm:pb-16 flex flex-col items-center justify-end sm:justify-center min-h-[100dvh]"
+        className="relative z-10 w-full max-w-4xl mx-auto px-3.5 sm:px-6 text-center pt-[calc(env(safe-area-inset-top,0px)+4.25rem)] sm:pt-20 pb-6 sm:pb-12 flex flex-col items-center justify-end min-h-dvh"
       >
         {/* Top badge */}
         <motion.div
@@ -150,7 +151,7 @@ export default function Hero() {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="w-16 sm:w-28 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent my-1 sm:my-2.5"
+          className="w-16 sm:w-28 h-px bg-linear-to-r from-transparent via-[#d4af37] to-transparent my-1 sm:my-2.5"
         />
 
         {/* Date & Location */}
@@ -203,14 +204,14 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-row sm:items-center sm:justify-center sm:gap-4 w-full max-w-xs sm:max-w-lg mx-auto px-1 sm:px-0"
+          className="flex flex-row items-center justify-center gap-2 sm:gap-4 w-full max-w-[320px] xs:max-w-sm sm:max-w-lg mx-auto px-1 sm:px-0"
         >
           {/* Send Wishes CTA */}
           <a
             href="#rsvp"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 xs:px-5 sm:px-7 py-2.5 sm:py-3 rounded-full gold-gradient-bg text-black font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-[38px] sm:min-h-[44px]"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 xs:px-4 sm:px-7 py-1.5 sm:py-3 rounded-full gold-gradient-bg text-black font-bold text-[10px] xs:text-xs sm:text-sm uppercase tracking-wide sm:tracking-wider whitespace-nowrap shadow-md hover:shadow-xl hover:brightness-110 active:scale-95 transition-all min-h-8 sm:min-h-11"
           >
-            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-black" />
+            <Heart className="w-3 h-3 sm:w-4 sm:h-4 fill-black shrink-0" />
             <span>Send Wishes</span>
           </a>
 
@@ -218,9 +219,9 @@ export default function Hero() {
           <button
             type="button"
             onClick={() => setIsCardModalOpen(true)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 xs:px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/60 text-[#f6e29f] hover:bg-[#d4af37]/20 font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider shadow-lg active:scale-95 transition-all min-h-[38px] sm:min-h-[44px] cursor-pointer touch-manipulation"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 xs:px-4 sm:px-7 py-1.5 sm:py-3 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/60 text-[#f6e29f] hover:bg-[#d4af37]/20 font-bold text-[10px] xs:text-xs sm:text-sm uppercase tracking-wide sm:tracking-wider whitespace-nowrap shadow-md active:scale-95 transition-all min-h-8 sm:min-h-11 cursor-pointer touch-manipulation"
           >
-            <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#d4af37]" />
+            <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-[#d4af37] shrink-0" />
             <span>Invitation Card</span>
           </button>
         </motion.div>
@@ -243,3 +244,4 @@ export default function Hero() {
     </section>
   );
 }
+

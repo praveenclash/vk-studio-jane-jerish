@@ -188,3 +188,23 @@ p, span, a, label {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Admin portal inputs */
+.admin-input {
+  background-color: #14100c;
+  color: #ffffff;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-input::placeholder {
+  color: #78716c;
+}
+
+.admin-input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
+}
+
+

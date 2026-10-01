@@ -289,7 +289,7 @@ export default function AdminPage() {
                     placeholder="Enter username (e.g. admin)"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/25 text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                    className="admin-input w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl text-base sm:text-sm"
                   />
                 </div>
               </div>
@@ -308,7 +308,7 @@ export default function AdminPage() {
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2.5 sm:py-3 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/25 text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                    className="admin-input w-full pl-10 pr-10 py-2.5 sm:py-3 rounded-xl text-base sm:text-sm"
                   />
                   <button
                     type="button"
@@ -323,7 +323,7 @@ export default function AdminPage() {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3 sm:py-3.5 rounded-full gold-gradient-bg text-black font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-[44px] flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
+                  className="w-full py-3 sm:py-3.5 rounded-full gold-gradient-bg text-black font-bold text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl hover:brightness-110 active:scale-95 transition-all min-h-11 flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
                 >
                   <ShieldCheck className="w-4 h-4" />
                   Sign In to Dashboard
@@ -362,74 +362,79 @@ export default function AdminPage() {
 
   // AUTHENTICATED ADMIN DASHBOARD
   return (
-    <div className="min-h-screen bg-[#0b0907] text-[#fcfbf7] p-3 xs:p-4 sm:p-8">
+    <div className="min-h-screen bg-[#0b0907] text-[#fcfbf7] p-3 xs:p-4 sm:p-8 pt-[calc(env(safe-area-inset-top,0px)+0.75rem)]">
       <div className="max-w-7xl mx-auto">
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-[#d4af37]/25">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-8 pb-4 sm:pb-6 border-b border-[#d4af37]/25">
+          <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/"
-              className="p-2 sm:p-2.5 rounded-xl bg-[#181410] border border-[#d4af37]/30 text-stone-300 hover:text-[#d4af37] shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0"
+              className="rounded-xl bg-[#181410] border border-[#d4af37]/30 text-stone-300 hover:text-[#d4af37] shadow-sm transition-all w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0"
               title="Back to Wedding Website"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
             </Link>
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <img
                 src="/images/logo-gold.png"
                 alt="JJ Monogram"
-                className="h-9 w-auto object-contain hidden xs:block"
+                className="h-8 sm:h-9 w-auto object-contain hidden xs:block shrink-0"
               />
-              <div>
-                <div className="flex items-center gap-2">
-                  <Database className="w-4 sm:w-5 h-4 sm:h-5 text-[#d4af37] shrink-0" />
-                  <h1 className="font-serif-luxury text-xl xs:text-2xl sm:text-3xl font-normal text-white leading-tight">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Database className="w-4 h-4 sm:w-5 sm:h-5 text-[#d4af37] shrink-0" />
+                  <h1 className="font-serif-luxury text-base xs:text-xl sm:text-2xl md:text-3xl font-normal text-white leading-tight">
                     Wedding SQL Database & Wishes Manager
                   </h1>
                 </div>
-                <p className="text-[11px] sm:text-xs text-[#b8ab96] mt-0.5 break-all">
-                  Database: <code className="bg-[#181410] px-1.5 py-0.5 rounded font-mono text-[10px] text-[#f6e29f] border border-[#d4af37]/20">wedding.db</code> • Table: <code className="bg-[#181410] px-1.5 py-0.5 rounded font-mono text-[10px] text-[#f6e29f] border border-[#d4af37]/20">wishes</code>
-                </p>
+                <div className="flex flex-wrap items-center gap-1 text-[10px] sm:text-xs text-[#b8ab96] mt-1">
+                  <span>Database:</span>
+                  <code className="bg-[#181410] px-1.5 py-0.5 rounded font-mono text-[9px] sm:text-[10px] text-[#f6e29f] border border-[#d4af37]/20">wedding.db</code>
+                  <span>•</span>
+                  <span>Table:</span>
+                  <code className="bg-[#181410] px-1.5 py-0.5 rounded font-mono text-[9px] sm:text-[10px] text-[#f6e29f] border border-[#d4af37]/20">wishes</code>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
             {/* Add Manual Wish button */}
             <button
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl gold-gradient-bg text-black text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all min-h-[40px] touch-manipulation cursor-pointer"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl gold-gradient-bg text-black text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all min-h-9 sm:min-h-10 touch-manipulation cursor-pointer whitespace-nowrap"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               <span>Add Wish</span>
             </button>
 
             {/* Export CSV */}
             <button
               onClick={exportCSV}
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all min-h-[40px] touch-manipulation cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all w-9 h-9 sm:w-auto sm:min-h-10 touch-manipulation cursor-pointer shrink-0"
+              title="Export CSV"
             >
-              <FileSpreadsheet className="w-4 h-4" />
-              <span className="hidden xs:inline">Export CSV</span>
+              <FileSpreadsheet className="w-4 h-4 shrink-0" />
+              <span className="hidden sm:inline">Export CSV</span>
             </button>
 
             {/* Refresh */}
             <button
               onClick={fetchRecords}
-              className="p-2.5 rounded-xl bg-[#181410] border border-[#d4af37]/35 text-stone-300 hover:text-[#d4af37] shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0 touch-manipulation cursor-pointer"
+              className="rounded-xl bg-[#181410] border border-[#d4af37]/35 text-stone-300 hover:text-[#d4af37] shadow-sm transition-all w-9 h-9 sm:w-10 sm:min-h-10 flex items-center justify-center shrink-0 touch-manipulation cursor-pointer"
               title="Refresh Data"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#d4af37]" : ""}`} />
+              <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${loading ? "animate-spin text-[#d4af37]" : ""}`} />
             </button>
 
             {/* Logout button */}
             <button
               onClick={handleLogout}
-              className="p-2.5 rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-900/60 shadow-sm transition-all min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0 touch-manipulation cursor-pointer"
+              className="rounded-xl bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-900/60 shadow-sm transition-all w-9 h-9 sm:w-10 sm:min-h-10 flex items-center justify-center shrink-0 touch-manipulation cursor-pointer"
               title="Sign Out"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
@@ -489,7 +494,7 @@ export default function AdminPage() {
               placeholder="Search guest name or blessing message..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[#d4af37]/30 text-xs sm:text-sm focus:outline-none focus:border-[#d4af37] bg-[#14100c] text-white placeholder:text-stone-500"
+              className="admin-input w-full pl-9 pr-4 py-2.5 rounded-xl text-xs sm:text-sm"
             />
           </div>
         </div>
@@ -501,7 +506,7 @@ export default function AdminPage() {
             <span>👉</span>
           </div>
           <div className="overflow-x-auto no-scrollbar" style={{ WebkitOverflowScrolling: "touch" }}>
-            <table className="w-full text-left text-xs min-w-[600px]">
+            <table className="w-full text-left text-xs min-w-150">
               <thead className="bg-[#14100c] border-b border-[#d4af37]/25 text-[#ded6ca] font-semibold uppercase tracking-wider text-[10px] sm:text-[11px]">
                 <tr>
                   <th className="py-3.5 px-4 font-cinzel">#ID</th>
@@ -623,7 +628,7 @@ export default function AdminPage() {
                   placeholder="e.g. Ramesh & Family"
                   value={addForm.name}
                   onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                  className="admin-input w-full px-3.5 py-2.5 rounded-xl text-base sm:text-sm"
                 />
               </div>
 
@@ -637,7 +642,7 @@ export default function AdminPage() {
                   placeholder="Enter their wedding wishes for Jane & Jerish..."
                   value={addForm.message}
                   onChange={(e) => setAddForm({ ...addForm, message: e.target.value })}
-                  className="w-full p-3 rounded-xl border border-[#d4af37]/30 focus:outline-none focus:border-[#d4af37] text-base sm:text-sm bg-[#14100c] text-white placeholder:text-stone-500"
+                  className="admin-input w-full p-3 rounded-xl text-base sm:text-sm"
                 />
               </div>
 
@@ -652,7 +657,7 @@ export default function AdminPage() {
                 <button
                   type="submit"
                   disabled={submittingWish}
-                  className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl gold-gradient-bg text-black text-xs font-bold uppercase tracking-wider shadow hover:brightness-110 disabled:opacity-50 min-h-[40px] cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl gold-gradient-bg text-black text-xs font-bold uppercase tracking-wider shadow hover:brightness-110 disabled:opacity-50 min-h-10 cursor-pointer"
                 >
                   {submittingWish ? (
                     <>
