@@ -8,7 +8,7 @@ export async function GET() {
     const wishes = await getAllWishes();
     return NextResponse.json({ success: true, data: wishes });
   } catch (error) {
-    console.error("Error fetching wishes from MySQL database:", error);
+    console.error("Error fetching wishes:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch wishes" },
       { status: 500 }
@@ -42,9 +42,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, data: newWish }, { status: 201 });
   } catch (error) {
-    console.error("Error saving wish to SQL database:", error);
+    console.error("Error saving wish:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to save wish to database" },
+      { success: false, error: "Failed to save wish" },
       { status: 500 }
     );
   }

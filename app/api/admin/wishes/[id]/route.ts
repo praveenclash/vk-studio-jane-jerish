@@ -25,7 +25,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true, message: "Deleted successfully" });
   } catch (error) {
-    console.error("Error deleting from database:", error);
+    console.error("Error deleting wish:", error);
     return NextResponse.json(
       { success: false, error: "Failed to delete" },
       { status: 500 }

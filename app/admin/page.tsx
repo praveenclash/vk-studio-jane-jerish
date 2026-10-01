@@ -177,14 +177,14 @@ export default function AdminPage() {
           message: "",
         });
 
-        setStatusMsg(`Successfully added wish from "${data.data.name}" to the SQL database!`);
+        setStatusMsg(`Successfully added wish from "${data.data.name}"!`);
         setTimeout(() => setStatusMsg(""), 5000);
       } else {
-        setAddError(data.error || "Failed to save wish to database.");
+        setAddError(data.error || "Failed to save wish.");
       }
     } catch (err) {
       console.error(err);
-      setAddError("Network error while connecting to SQL database.");
+      setAddError("Network error while submitting wish.");
     } finally {
       setSubmittingWish(false);
     }
@@ -667,7 +667,7 @@ export default function AdminPage() {
                   ) : (
                     <>
                       <Send className="w-3.5 h-3.5" />
-                      Save to Database
+                      Save Wish
                     </>
                   )}
                 </button>

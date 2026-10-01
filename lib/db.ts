@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 
 export interface Wish {
   id: number;
@@ -9,8 +10,12 @@ export interface Wish {
   likes: number;
 }
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const WISHES_FILE = path.join(DATA_DIR, "wishes.txt");
+// 1. Primary local workspace text file (used in development)
+const LOCAL_DATA_DIR = path.join(process.cwd(), "data");
+const LOCAL_WISHES_FILE = path.join(LOCAL_DATA_DIR, "wishes.txt");
+
+// 2. Production fallback text file (Vercel serverless /tmp which is writable)
+const TMP_WISHES_FILE = path.join(os.tmpdir(), "wishes.txt");
 
 const defaultSeedWishes: Wish[] = [
   {
@@ -43,43 +48,90 @@ const defaultSeedWishes: Wish[] = [
   },
 ];
 
-/**
- * Ensures data directory and wishes.txt exist.
- */
-function ensureStorage(): void {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(WISHES_FILE)) {
-    fs.writeFileSync(WISHES_FILE, JSON.stringify(defaultSeedWishes, null, 2), "utf-8");
-  }
-}
+// Global in-memory cache to share wishes across serverless invocations and hot-reloads
+const globalStore = globalThis as unknown as {
+  __wishesCache?: Wish[];
+};
 
 /**
- * Reads all wishes from data/wishes.txt
+ * Reads wishes from the text file or falls back to seed data.
  */
 async function readWishesFromFile(): Promise<Wish[]> {
-  try {
-    ensureStorage();
-    const content = await fs.promises.readFile(WISHES_FILE, "utf-8");
-    if (!content.trim()) return [];
-    const parsed = JSON.parse(content);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.error("Error reading wishes from text file:", error);
-    return defaultSeedWishes;
+  // 1. Return in-memory cache if available
+  if (globalStore.__wishesCache && globalStore.__wishesCache.length > 0) {
+    return globalStore.__wishesCache;
   }
+
+  // 2. Try reading from /tmp/wishes.txt (on Vercel if updated)
+  if (fs.existsSync(TMP_WISHES_FILE)) {
+    try {
+      const content = await fs.promises.readFile(TMP_WISHES_FILE, "utf-8");
+      if (content.trim()) {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          globalStore.__wishesCache = parsed;
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn("Could not read from tmp wishes file:", e);
+    }
+  }
+
+  // 3. Try reading from project data/wishes.txt
+  if (fs.existsSync(LOCAL_WISHES_FILE)) {
+    try {
+      const content = await fs.promises.readFile(LOCAL_WISHES_FILE, "utf-8");
+      if (content.trim()) {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          globalStore.__wishesCache = parsed;
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn("Could not read from local wishes file:", e);
+    }
+  }
+
+  // 4. Default seed fallback
+  globalStore.__wishesCache = [...defaultSeedWishes];
+  return globalStore.__wishesCache;
 }
 
 /**
- * Writes all wishes to data/wishes.txt atomically
+ * Saves wishes to text file (handles both local development and Vercel read-only filesystem).
  */
 async function writeWishesToFile(wishes: Wish[]): Promise<void> {
-  ensureStorage();
-  const tempPath = `${WISHES_FILE}.tmp`;
+  // Always update in-memory cache first
+  globalStore.__wishesCache = [...wishes];
   const content = JSON.stringify(wishes, null, 2);
-  await fs.promises.writeFile(tempPath, content, "utf-8");
-  await fs.promises.rename(tempPath, WISHES_FILE);
+
+  // Attempt 1: Write to local workspace data/wishes.txt (works in local development)
+  let wroteLocally = false;
+  try {
+    if (!fs.existsSync(LOCAL_DATA_DIR)) {
+      fs.mkdirSync(LOCAL_DATA_DIR, { recursive: true });
+    }
+    const tempPath = `${LOCAL_WISHES_FILE}.tmp`;
+    await fs.promises.writeFile(tempPath, content, "utf-8");
+    await fs.promises.rename(tempPath, LOCAL_WISHES_FILE);
+    wroteLocally = true;
+  } catch {
+    // EROFS / read-only filesystem on Vercel production serverless
+    wroteLocally = false;
+  }
+
+  // Attempt 2: Write to /tmp/wishes.txt (permitted on Vercel serverless)
+  if (!wroteLocally) {
+    try {
+      const tmpPath = `${TMP_WISHES_FILE}.tmp`;
+      await fs.promises.writeFile(tmpPath, content, "utf-8");
+      await fs.promises.rename(tmpPath, TMP_WISHES_FILE);
+    } catch (e) {
+      console.warn("Could not write to tmp wishes file, stored in memory cache:", e);
+    }
+  }
 }
 
 /**
@@ -91,7 +143,7 @@ export async function getAllWishes(): Promise<Wish[]> {
 }
 
 /**
- * Create a new wish and append/save to text file
+ * Create a new wish and save to text file
  */
 export async function createWish(data: { name: string; message: string }): Promise<Wish> {
   const cleanName = data.name.trim();
@@ -115,7 +167,7 @@ export async function createWish(data: { name: string; message: string }): Promi
 }
 
 /**
- * Increment the like count for a wish in the text file
+ * Increment like count in text file
  */
 export async function toggleLikeWish(id: number): Promise<Wish | null> {
   const wishes = await readWishesFromFile();
@@ -129,7 +181,7 @@ export async function toggleLikeWish(id: number): Promise<Wish | null> {
 }
 
 /**
- * Delete a wish by ID from the text file
+ * Delete a wish by ID from text file
  */
 export async function deleteWish(id: number): Promise<boolean> {
   const wishes = await readWishesFromFile();
