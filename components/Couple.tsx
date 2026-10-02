@@ -83,10 +83,10 @@ export default function Couple() {
           {/* Fixed aspect ratio card window - image glides smoothly inside on scroll */}
           <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 sm:mb-6 bg-stone-900 shadow-inner">
             <ParallaxImage
-              src="/images/bride-jane.webp"
+              src="/images/MAD_174.webp"
               alt="Bride - Jane"
               offset={20}
-              objectPosition="center 25%"
+              objectPosition="70% 25%"
             />
             <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-10 bg-[#0b0907]/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] sm:text-xs font-cinzel font-semibold tracking-wider text-[#f6e29f] border border-[#d4af37]/40 uppercase shadow-sm">
               The Bride

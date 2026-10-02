@@ -51,8 +51,14 @@ export default function Gallery() {
       src: "/images/MAD_1881.webp",
       position: "center 30%",
     },
-    {
+     {
       id: 8,
+      caption: "Sunset Laughter & Ocean Breeze",
+      src: "/images/MAD_1839.webp",
+      position: "center 30%",
+    },
+    {
+      id: 9,
       caption: "Joyous Moments in Nature",
       src: "/images/MAD_1666.webp",
       position: "center 25%",
