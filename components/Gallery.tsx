@@ -54,7 +54,7 @@ export default function Gallery() {
      {
       id: 8,
       caption: "Sunset Laughter & Ocean Breeze",
-      src: "/images/MAD_1839.webp",
+      src: "/images/MAD_1839.JPG",
       position: "center 30%",
     },
     {

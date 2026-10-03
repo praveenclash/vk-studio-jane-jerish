@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import BackgroundMusic from "@/components/BackgroundMusic";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -38,6 +39,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col antialiased bg-[#0b0907] text-[#fcfbf7] selection:bg-[#d4af37]/30 selection:text-[#f6e29f]">
+        <BackgroundMusic />
         {children}
       </body>
     </html>
