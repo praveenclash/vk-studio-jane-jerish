@@ -45,10 +45,10 @@ function getPool(): Pool {
   if (!globalStore.mysqlPool) {
     const connectionUri =
       process.env.MYSQL_PUBLIC_URL ||
-      process.env.MYSQL_URL ||
-      process.env.DATABASE_URL;
+      process.env.DATABASE_URL ||
+      process.env.MYSQL_URL;
 
-    if (connectionUri && !process.env.MYSQLHOST_PUBLIC) {
+    if (connectionUri) {
       globalStore.mysqlPool = mysql.createPool({
         uri: connectionUri,
         waitForConnections: true,
