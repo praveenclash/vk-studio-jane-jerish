@@ -9,34 +9,7 @@ export interface Wish {
 }
 
 const defaultSeedWishes: Wish[] = [
-  {
-    id: 1,
-    name: "Dr. Aravind & Family",
-    message: "Wishing Jane & Jerish an eternity of unconditional love, joy, and blessed companionship! Can't wait to celebrate your special day!",
-    created_at: new Date(Date.now() - 3600000 * 24 * 3).toISOString().replace("T", " ").slice(0, 19),
-    likes: 12,
-  },
-  {
-    id: 2,
-    name: "Sowmya & Karthik",
-    message: "Two beautiful souls meant for each other. May your life together be filled with laughter, adventures, and endless happiness!",
-    created_at: new Date(Date.now() - 3600000 * 24 * 2).toISOString().replace("T", " ").slice(0, 19),
-    likes: 8,
-  },
-  {
-    id: 3,
-    name: "Praveen Kumar",
-    message: "Heartiest congratulations to the gorgeous couple! So happy to see you both embark on this wonderful journey together.",
-    created_at: new Date(Date.now() - 3600000 * 5).toISOString().replace("T", " ").slice(0, 19),
-    likes: 5,
-  },
-  {
-    id: 4,
-    name: "Revathy Auntie",
-    message: "May God bless this holy union with abundant grace and joy. Counting down the days to the grand celebration!",
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString().replace("T", " ").slice(0, 19),
-    likes: 15,
-  },
+  
 ];
 
 // Singleton storage in globalThis for Next.js hot-reloads
